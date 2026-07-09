@@ -3,841 +3,2931 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Finance Manager</title>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+<title>SmartSave - Tabungan Modern 2026</title>
 <style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
+/* ============ VARIABLES & THEME ============ */
+:root {
+    --primary: #4f46e5;
+    --primary-light: #6366f1;
+    --secondary: #06b6d4;
+    --accent: #8b5cf6;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    
+    --bg-light: linear-gradient(135deg, #e0f2fe 0%, #f3e8ff 50%, #cffafe 100%);
+    --bg-dark: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #164e63 100%);
+    
+    --glass-light: rgba(255, 255, 255, 0.65);
+    --glass-dark: rgba(15, 23, 42, 0.65);
+    --border-light: rgba(255, 255, 255, 0.6);
+    --border-dark: rgba(255, 255, 255, 0.1);
+    
+    --text-light: #1e293b;
+    --text-dark: #f1f5f9;
+    --muted-light: #64748b;
+    --muted-dark: #94a3b8;
+    
+    --card-light: rgba(255, 255, 255, 0.5);
+    --card-dark: rgba(30, 41, 59, 0.5);
+    
+    --shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-body{
-
-    min-height:100vh;
-    background:linear-gradient(135deg,#2563eb,#7c3aed,#10b981);
-    color:white;
-
+[data-theme="dark"] {
+    --bg: var(--bg-dark);
+    --glass: var(--glass-dark);
+    --border: var(--border-dark);
+    --text: var(--text-dark);
+    --muted: var(--muted-dark);
+    --card: var(--card-dark);
+}
+[data-theme="light"] {
+    --bg: var(--bg-light);
+    --glass: var(--glass-light);
+    --border: var(--border-light);
+    --text: var(--text-light);
+    --muted: var(--muted-light);
+    --card: var(--card-light);
 }
 
-
-/* LOGIN */
-
-#loginPage{
-
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    transition: background 0.5s ease, color 0.3s ease;
+    overflow-x: hidden;
 }
 
-
-.login-box{
-
-    width:350px;
-    padding:30px;
-    background:rgba(255,255,255,.15);
-    backdrop-filter:blur(15px);
-    border-radius:25px;
-    box-shadow:0 20px 40px #0005;
-    animation:show .6s;
-
+/* ============ BACKGROUND ORBS ============ */
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.4;
+    z-index: -1;
+    animation: float 25s infinite ease-in-out;
+}
+.orb1 { width: 400px; height: 400px; background: var(--primary); top: -150px; left: -150px; }
+.orb2 { width: 500px; height: 500px; background: var(--accent); bottom: -200px; right: -200px; animation-delay: -8s; }
+.orb3 { width: 300px; height: 300px; background: var(--secondary); top: 40%; left: 60%; animation-delay: -15s; }
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(60px, -60px) scale(1.1); }
+    66% { transform: translate(-40px, 40px) scale(0.9); }
 }
 
+/* ============ UTILITIES ============ */
+.glass {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    border-radius: var(--radius);
+}
+.hidden { display: none !important; }
+.text-muted { color: var(--muted); }
+.text-primary { color: var(--primary); }
+.text-success { color: var(--success); }
+.text-danger { color: var(--danger); }
+.text-warning { color: var(--warning); }
+.font-bold { font-weight: 700; }
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.5rem; }
+.text-2xl { font-size: 2rem; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-4 { margin-top: 1rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.flex-wrap { flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.w-full { width: 100%; }
+.grid { display: grid; }
 
-@keyframes show{
+@keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
-from{
-opacity:0;
-transform:translateY(40px);
+.animate-fade { animation: fadeIn 0.5s ease forwards; }
+.animate-slide { animation: slideUp 0.6s ease forwards; }
+
+/* ============ BUTTONS ============ */
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: inherit;
+}
+.btn-primary { background: var(--primary); color: white; }
+.btn-secondary { background: var(--secondary); color: white; }
+.btn-accent { background: var(--accent); color: white; }
+.btn-success { background: var(--success); color: white; }
+.btn-danger { background: var(--danger); color: white; }
+.btn-warning { background: var(--warning); color: white; }
+.btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+.btn-ghost { background: transparent; color: var(--text); }
+
+.btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(79, 70, 229, 0.3); }
+.btn:active { transform: translateY(0) scale(0.98); }
+
+/* Ripple Effect */
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transform: scale(0);
+    animation: ripple 0.6s linear;
+    pointer-events: none;
+}
+@keyframes ripple { to { transform: scale(4); opacity: 0; } }
+
+/* ============ INPUTS ============ */
+.form-group { margin-bottom: 1rem; }
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text);
+}
+.input, .select {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text);
+    outline: none;
+    transition: var(--transition);
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+.input:focus, .select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+.input.error { border-color: var(--danger); animation: shake 0.3s; }
+.input-wrapper { position: relative; }
+.input-icon {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    opacity: 0.6;
+    user-select: none;
+}
+.input-icon:hover { opacity: 1; }
+
+/* ============ LOADER ============ */
+#loader {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: var(--bg);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    transition: opacity 0.5s;
+}
+.loader-spinner {
+    width: 50px; height: 50px;
+    border: 4px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    border-top-color: var(--primary);
+    animation: spin 1s linear infinite;
+}
+.loader-text {
+    font-weight: 600;
+    color: var(--primary);
+    letter-spacing: 2px;
 }
 
-to{
-opacity:1;
+/* ============ TOAST ============ */
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 3000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-width: 350px;
+}
+.toast {
+    padding: 14px 20px;
+    border-radius: var(--radius-sm);
+    color: white;
+    animation: slideInRight 0.4s ease;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+}
+.toast.success { background: rgba(16, 185, 129, 0.95); }
+.toast.error { background: rgba(239, 68, 68, 0.95); }
+.toast.warning { background: rgba(245, 158, 11, 0.95); }
+.toast.info { background: rgba(79, 70, 229, 0.95); }
+@keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* ============ AUTH SCREEN ============ */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+.auth-card {
+    width: 100%;
+    max-width: 420px;
+    padding: 40px;
+    text-align: center;
+    animation: scaleIn 0.5s ease;
+}
+.auth-logo { font-size: 3rem; margin-bottom: 10px; }
+.auth-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+.auth-subtitle { color: var(--muted); margin-bottom: 24px; font-size: 0.9rem; }
+.auth-toggle {
+    color: var(--primary);
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: underline;
+}
+.auth-toggle:hover { color: var(--accent); }
+
+/* ============ APP LAYOUT ============ */
+.app-layout { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+    width: 260px;
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    z-index: 100;
+    transition: var(--transition);
+    overflow-y: auto;
+}
+.logo {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 8px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.nav-section { margin-bottom: 20px; }
+.nav-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    padding: 0 12px;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+.nav-item {
+    padding: 11px 14px;
+    margin-bottom: 4px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: var(--transition);
+    font-size: 0.9rem;
+    font-weight: 500;
+    position: relative;
+}
+.nav-item:hover {
+    background: rgba(79, 70, 229, 0.1);
+    color: var(--primary);
+    transform: translateX(4px);
+}
+.nav-item.active {
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(139, 92, 246, 0.2));
+    color: var(--primary);
+    font-weight: 600;
+}
+.nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60%;
+    background: var(--primary);
+    border-radius: 0 3px 3px 0;
+}
+.nav-icon { font-size: 1.1rem; }
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    margin-left: 260px;
+    padding: 24px 32px;
+    transition: var(--transition);
+    min-height: 100vh;
 }
 
+/* Header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+.header-title { font-size: 1.5rem; font-weight: 700; }
+.header-subtitle { color: var(--muted); font-size: 0.9rem; margin-top: 2px; }
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    transition: var(--transition);
+}
+.user-profile:hover { background: rgba(79, 70, 229, 0.1); }
+.avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+.user-info { text-align: right; }
+.user-name { font-weight: 600; font-size: 0.95rem; }
+.user-level { font-size: 0.75rem; color: var(--primary); font-weight: 600; }
+
+/* ============ DASHBOARD CARDS ============ */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.stat-card {
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition);
+    cursor: pointer;
+}
+.stat-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(79, 70, 229, 0.2); }
+.stat-icon {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    font-size: 2.2rem;
+    opacity: 0.15;
+}
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+}
+.stat-value {
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin: 8px 0 4px;
+}
+.stat-change {
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
-
-input,select,button{
-
-    width:100%;
-    padding:12px;
-    margin:8px 0;
-    border-radius:12px;
-    border:none;
-
+/* ============ PROGRESS BAR ============ */
+.target-card { padding: 24px; margin-bottom: 24px; }
+.target-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.target-name { font-size: 1.2rem; font-weight: 700; }
+.target-amount { color: var(--muted); font-size: 0.9rem; margin-top: 4px; }
+.progress-wrapper { margin-top: 12px; }
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+}
+.progress-bar {
+    height: 12px;
+    background: rgba(0,0,0,0.08);
+    border-radius: 6px;
+    overflow: hidden;
+    position: relative;
+}
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+    background-size: 200% 100%;
+    width: 0%;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 6px;
+    animation: shimmer 3s infinite;
+}
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
+/* ============ CHARTS ============ */
+.chart-container { padding: 24px; margin-bottom: 24px; }
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.chart-canvas-wrapper { position: relative; width: 100%; height: 300px; }
+.chart-canvas-wrapper canvas { width: 100%; height: 100%; }
+.chart-legend {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 16px;
+    justify-content: center;
+}
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; }
+.legend-dot { width: 12px; height: 12px; border-radius: 50%; }
 
-button{
+/* ============ TRANSACTIONS ============ */
+.transaction-list { display: flex; flex-direction: column; gap: 10px; }
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-radius: var(--radius-sm);
+    background: var(--card);
+    border: 1px solid var(--border);
+    transition: var(--transition);
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.transaction-item:hover {
+    transform: translateX(4px);
+    border-color: var(--primary);
+    box-shadow: 0 4px 16px rgba(79, 70, 229, 0.1);
+}
+.t-left { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 200px; }
+.t-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+}
+.t-icon.income { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+.t-icon.expense { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
+.t-info h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 3px; }
+.t-meta { font-size: 0.78rem; color: var(--muted); display: flex; gap: 8px; flex-wrap: wrap; }
+.t-right { display: flex; align-items: center; gap: 12px; }
+.t-amount { font-weight: 700; font-size: 1rem; white-space: nowrap; }
+.t-amount.income { color: var(--success); }
+.t-amount.expense { color: var(--danger); }
+.t-actions { display: flex; gap: 6px; }
+.icon-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+    font-size: 0.9rem;
+}
+.icon-btn:hover { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.1); }
+.icon-btn.danger:hover { background: var(--danger); border-color: var(--danger); }
 
-    cursor:pointer;
-    background:white;
-    color:#2563eb;
-    font-weight:bold;
-    transition:.3s;
-
+/* ============ MODAL ============ */
+.modal {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    padding: 20px;
+}
+.modal.open { opacity: 1; pointer-events: auto; }
+.modal-content {
+    width: 100%;
+    max-width: 500px;
+    padding: 28px;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0.9);
+    transition: transform 0.3s;
+}
+.modal.open .modal-content { transform: scale(1); }
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+}
+.modal-title { font-size: 1.2rem; font-weight: 700; }
+.modal-close {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: var(--text);
+    transition: var(--transition);
+}
+.modal-close:hover { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+.modal-footer {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
 }
 
-
-button:hover{
-
-    transform:scale(1.05);
-
+/* ============ CALENDAR ============ */
+.calendar { padding: 20px; }
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+}
+.calendar-day-name {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--muted);
+    padding: 8px 0;
+    text-transform: uppercase;
+}
+.calendar-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 0.9rem;
+    position: relative;
+    background: var(--card);
+    border: 1px solid transparent;
+}
+.calendar-day:hover { border-color: var(--primary); transform: scale(1.05); }
+.calendar-day.other-month { opacity: 0.3; }
+.calendar-day.today {
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    font-weight: 700;
+}
+.calendar-day.has-trans { border-color: var(--success); }
+.calendar-day.has-trans::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--success);
 }
 
-
-
-/* DASHBOARD */
-
-
-#dashboard{
-
-display:none;
-
+/* ============ ACHIEVEMENTS ============ */
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+}
+.achievement-card {
+    padding: 20px;
+    text-align: center;
+    transition: var(--transition);
+    position: relative;
+}
+.achievement-card.locked { opacity: 0.5; filter: grayscale(0.7); }
+.achievement-card.unlocked:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(79, 70, 229, 0.2); }
+.achievement-icon { font-size: 3rem; margin-bottom: 10px; }
+.achievement-name { font-weight: 700; margin-bottom: 4px; }
+.achievement-desc { font-size: 0.8rem; color: var(--muted); }
+.achievement-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--success);
+    color: white;
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: 700;
 }
 
-
-nav{
-
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px;
-
+/* ============ PROFILE ============ */
+.profile-header { text-align: center; padding: 30px 20px; }
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin: 0 auto 16px;
+    box-shadow: 0 8px 24px rgba(79, 70, 229, 0.3);
+}
+.profile-name { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+.profile-level {
+    display: inline-block;
+    padding: 4px 14px;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 8px;
 }
 
+/* ============ QUOTE ============ */
+.quote-card {
+    padding: 24px;
+    margin-bottom: 24px;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.15), rgba(139, 92, 246, 0.15));
+    border: 1px solid rgba(79, 70, 229, 0.3);
+    text-align: center;
+    position: relative;
+}
+.quote-icon { font-size: 2rem; opacity: 0.3; position: absolute; top: 10px; left: 20px; }
+.quote-text { font-style: italic; font-size: 1rem; margin-bottom: 8px; line-height: 1.5; }
+.quote-author { font-size: 0.85rem; color: var(--muted); font-weight: 600; }
 
-.logout{
-
-width:120px;
-
+/* ============ TOOLTIP ============ */
+[data-tooltip] { position: relative; }
+[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--text);
+    color: var(--bg);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    z-index: 100;
+    animation: fadeIn 0.2s;
 }
 
-
-.container-dashboard{
-
-padding:20px;
-
+/* ============ FOOTER ============ */
+.footer {
+    margin-top: 40px;
+    padding: 20px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border);
 }
 
-
-.cards{
-
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
-gap:20px;
-
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+    .sidebar {
+        transform: translateX(-100%);
+        width: 260px;
+        box-shadow: 4px 0 24px rgba(0,0,0,0.2);
+    }
+    .sidebar.open { transform: translateX(0); }
+    .main-content { margin-left: 0; padding: 16px; }
+    .menu-toggle { display: flex !important; }
+    .stat-value { font-size: 1.4rem; }
+    .header-title { font-size: 1.2rem; }
+    .t-right { width: 100%; justify-content: space-between; }
+    .calendar-day { font-size: 0.75rem; }
+}
+@media (min-width: 769px) {
+    .menu-toggle { display: none !important; }
+    .sidebar-overlay { display: none !important; }
 }
 
+.sidebar-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 99;
+    display: none;
+}
+.sidebar-overlay.show { display: block; }
 
-.card{
-
-background:rgba(255,255,255,.15);
-backdrop-filter:blur(15px);
-padding:20px;
-border-radius:20px;
-margin-bottom:20px;
-
+/* ============ PRINT ============ */
+@media print {
+    body { background: white !important; color: black !important; }
+    .sidebar, .header, .footer, .btn, .no-print { display: none !important; }
+    .main-content { margin: 0 !important; padding: 0 !important; }
+    .glass { background: white !important; box-shadow: none !important; border: 1px solid #ddd !important; }
+    .stat-card, .chart-container { break-inside: avoid; }
 }
 
-
-.card:hover{
-
-transform:translateY(-5px);
-transition:.3s;
-
+/* ============ EMPTY STATE ============ */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
 }
+.empty-icon { font-size: 3.5rem; margin-bottom: 12px; opacity: 0.5; }
+.empty-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+.empty-desc { font-size: 0.9rem; }
 
-
-.big{
-
-font-size:25px;
-font-weight:bold;
-
+/* ============ BADGE ============ */
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
 }
+.badge-income { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+.badge-expense { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
 
-
-
-table{
-
-width:100%;
-border-collapse:collapse;
-
+/* ============ SCROLL TO TOP ============ */
+#scroll-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 16px rgba(79, 70, 229, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition);
+    z-index: 90;
 }
-
-
-th,td{
-
-padding:10px;
-border-bottom:1px solid #ffffff55;
-
-}
-
-
-.delete{
-
-background:#ef4444;
-color:white;
-
-}
-
-
-@media(max-width:600px){
-
-nav{
-
-flex-direction:column;
-gap:10px;
-
-}
-
-}
-
-
+#scroll-top.show { opacity: 1; pointer-events: auto; }
+#scroll-top:hover { transform: translateY(-4px); }
 </style>
-
 </head>
+<body data-theme="light">
 
+<!-- Background Orbs -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
 
-<body>
-
-
-
-<!-- LOGIN -->
-
-
-<div id="loginPage">
-
-
-<div class="login-box">
-
-<h1>💰 Finance Manager</h1>
-
-<input id="user" placeholder="Username">
-
-<input id="pass" type="password" placeholder="Password">
-
-
-<button onclick="register()">
-Register
-</button>
-
-
-<button onclick="login()">
-Login
-</button>
-
-
-<p id="info"></p>
-
-
+<!-- Loader -->
+<div id="loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">SMARTSAVE</div>
 </div>
 
+<!-- Toast Container -->
+<div id="toast-container"></div>
 
+<!-- Scroll to Top -->
+<button id="scroll-top" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<!-- ============ AUTH SECTION ============ -->
+<section id="auth-section" class="auth-container hidden">
+    <div class="glass auth-card">
+        <div class="auth-logo">💰</div>
+        <div class="auth-title">SmartSave</div>
+        <div class="auth-subtitle" id="auth-subtitle">Kelola tabunganmu dengan cerdas</div>
+        
+        <form id="auth-form" autocomplete="off">
+            <div class="form-group" id="name-group" style="display:none;">
+                <label>Nama Lengkap</label>
+                <input type="text" class="input" id="auth-name" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" class="input" id="auth-username" placeholder="username" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-wrapper">
+                    <input type="password" class="input" id="auth-password" placeholder="••••••••" required>
+                    <span class="input-icon" onclick="togglePassword()">👁️</span>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-full" id="auth-submit">Masuk</button>
+        </form>
+        
+        <p class="mt-4 text-sm text-muted">
+            <span id="auth-switch-text">Belum punya akun?</span>
+            <span class="auth-toggle" onclick="toggleAuthMode()" id="auth-toggle-btn">Daftar</span>
+        </p>
+    </div>
+</section>
+
+<!-- ============ APP SECTION ============ -->
+<section id="app-section" class="app-layout hidden">
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="closeSidebar()"></div>
+    
+    <!-- Sidebar -->
+    <aside class="glass sidebar" id="sidebar">
+        <div class="logo">💰 SmartSave</div>
+        
+        <div class="nav-section">
+            <div class="nav-label">Menu Utama</div>
+            <div class="nav-item active" data-view="dashboard" onclick="navigate('dashboard')">
+                <span class="nav-icon">📊</span><span>Dashboard</span>
+            </div>
+            <div class="nav-item" data-view="transactions" onclick="navigate('transactions')">
+                <span class="nav-icon">💳</span><span>Transaksi</span>
+            </div>
+            <div class="nav-item" data-view="targets" onclick="navigate('targets')">
+                <span class="nav-icon">🎯</span><span>Target</span>
+            </div>
+            <div class="nav-item" data-view="calendar" onclick="navigate('calendar')">
+                <span class="nav-icon">📅</span><span>Kalender</span>
+            </div>
+            <div class="nav-item" data-view="stats" onclick="navigate('stats')">
+                <span class="nav-icon">📈</span><span>Statistik</span>
+            </div>
+            <div class="nav-item" data-view="achievements" onclick="navigate('achievements')">
+                <span class="nav-icon">🏆</span><span>Pencapaian</span>
+            </div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="nav-label">Akun</div>
+            <div class="nav-item" data-view="profile" onclick="navigate('profile')">
+                <span class="nav-icon">👤</span><span>Profil</span>
+            </div>
+            <div class="nav-item" data-view="settings" onclick="navigate('settings')">
+                <span class="nav-icon">⚙️</span><span>Pengaturan</span>
+            </div>
+            <div class="nav-item" onclick="toggleTheme()" data-tooltip="Ganti tema">
+                <span class="nav-icon" id="theme-icon">🌙</span><span>Mode Gelap</span>
+            </div>
+            <div class="nav-item" onclick="logout()" style="color: var(--danger);">
+                <span class="nav-icon">🚪</span><span>Keluar</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="header">
+            <div class="flex items-center gap-3">
+                <button class="btn btn-outline menu-toggle" onclick="toggleSidebar()">☰</button>
+                <div>
+                    <div class="header-title" id="page-title">Dashboard</div>
+                    <div class="header-subtitle" id="page-subtitle">Selamat datang kembali!</div>
+                </div>
+            </div>
+            <div class="user-profile" onclick="navigate('profile')">
+                <div class="user-info">
+                    <div class="user-name" id="header-name">User</div>
+                    <div class="user-level" id="header-level">Level 1</div>
+                </div>
+                <div class="avatar" id="header-avatar">U</div>
+            </div>
+        </header>
+
+        <!-- Dashboard View -->
+        <div id="view-dashboard" class="view animate-fade">
+            <div class="quote-card glass">
+                <div class="quote-icon">❝</div>
+                <div class="quote-text" id="daily-quote">"Menabung adalah jembatan menuju kebebasan finansial."</div>
+                <div class="quote-author" id="daily-quote-author">— Motivasi Hari Ini</div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="glass stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-label">Total Tabungan</div>
+                    <div class="stat-value text-primary" id="stat-balance">Rp 0</div>
+                    <div class="stat-change text-muted" id="stat-balance-change">Mulai menabung sekarang</div>
+                </div>
+                <div class="glass stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-label">Pemasukan Bulan Ini</div>
+                    <div class="stat-value text-success" id="stat-income">Rp 0</div>
+                    <div class="stat-change text-muted" id="stat-income-count">0 transaksi</div>
+                </div>
+                <div class="glass stat-card">
+                    <div class="stat-icon">📉</div>
+                    <div class="stat-label">Pengeluaran Bulan Ini</div>
+                    <div class="stat-value text-danger" id="stat-expense">Rp 0</div>
+                    <div class="stat-change text-muted" id="stat-expense-count">0 transaksi</div>
+                </div>
+                <div class="glass stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-label">Progress Target</div>
+                    <div class="stat-value text-warning" id="stat-progress">0%</div>
+                    <div class="stat-change text-muted" id="stat-remaining">Belum ada target</div>
+                </div>
+            </div>
+
+            <div class="glass target-card">
+                <div class="target-header">
+                    <div>
+                        <div class="target-name" id="target-name-display">🎯 Target Tabungan</div>
+                        <div class="target-amount" id="target-amount-display">Belum ada target. Buat target pertamamu!</div>
+                    </div>
+                    <button class="btn btn-outline" onclick="navigate('targets')">Kelola Target</button>
+                </div>
+                <div class="progress-wrapper">
+                    <div class="progress-info">
+                        <span id="target-current">Rp 0</span>
+                        <span id="target-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="target-fill"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-4 text-sm text-muted flex-wrap gap-2">
+                    <span id="target-remaining">Sisa: Rp 0</span>
+                    <span id="target-estimation">Estimasi: -</span>
+                </div>
+            </div>
+
+            <div class="glass chart-container">
+                <div class="chart-header">
+                    <h3>📊 Grafik Perkembangan Tabungan</h3>
+                    <select class="select" id="chart-period" onchange="renderDashboardChart()" style="width: auto;">
+                        <option value="6">6 Bulan Terakhir</option>
+                        <option value="12">12 Bulan Terakhir</option>
+                    </select>
+                </div>
+                <div class="chart-canvas-wrapper">
+                    <canvas id="dashboardChart"></canvas>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item"><div class="legend-dot" style="background: var(--success);"></div>Pemasukan</div>
+                    <div class="legend-item"><div class="legend-dot" style="background: var(--danger);"></div>Pengeluaran</div>
+                    <div class="legend-item"><div class="legend-dot" style="background: var(--primary);"></div>Saldo</div>
+                </div>
+            </div>
+
+            <div class="glass p-6">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                    <h3>🕒 Transaksi Terbaru</h3>
+                    <button class="btn btn-outline" onclick="navigate('transactions')">Lihat Semua</button>
+                </div>
+                <div id="recent-transactions" class="transaction-list"></div>
+            </div>
+        </div>
+
+        <!-- Transactions View -->
+        <div id="view-transactions" class="view hidden animate-fade">
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h2>Riwayat Transaksi</h2>
+                <div class="flex gap-2 flex-wrap">
+                    <button class="btn btn-success" onclick="openTransModal('income')">+ Pemasukan</button>
+                    <button class="btn btn-danger" onclick="openTransModal('expense')">+ Pengeluaran</button>
+                </div>
+            </div>
+            
+            <div class="glass p-4 mb-4">
+                <div class="flex gap-2 flex-wrap">
+                    <input type="text" class="input" id="search-trans" placeholder="🔍 Cari keterangan atau nominal..." oninput="renderTransactions()">
+                    <select class="select" id="filter-type" onchange="renderTransactions()" style="max-width: 160px;">
+                        <option value="">Semua Jenis</option>
+                        <option value="income">Pemasukan</option>
+                        <option value="expense">Pengeluaran</option>
+                    </select>
+                    <select class="select" id="filter-cat" onchange="renderTransactions()" style="max-width: 160px;">
+                        <option value="">Semua Kategori</option>
+                        <option value="Menabung">Menabung</option>
+                        <option value="Gaji">Gaji</option>
+                        <option value="Hadiah">Hadiah</option>
+                        <option value="Bonus">Bonus</option>
+                        <option value="Tarik Uang">Tarik Uang</option>
+                        <option value="Belanja">Belanja</option>
+                        <option value="Tagihan">Tagihan</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                    <input type="date" class="input" id="filter-date" onchange="renderTransactions()" style="max-width: 170px;">
+                    <select class="select" id="sort-date" onchange="renderTransactions()" style="max-width: 160px;">
+                        <option value="newest">Terbaru</option>
+                        <option value="oldest">Terlama</option>
+                        <option value="highest">Nominal Tertinggi</option>
+                        <option value="lowest">Nominal Terendah</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="transactions-list" class="transaction-list"></div>
+        </div>
+
+        <!-- Targets View -->
+        <div id="view-targets" class="view hidden animate-fade">
+            <div class="flex justify-between items-center mb-4 flex-wrap gap-2">
+                <h2>Target Tabungan</h2>
+                <button class="btn btn-primary" onclick="openTargetModal()">🎯 Atur Target</button>
+            </div>
+
+            <div class="glass target-card mb-4">
+                <div class="target-header">
+                    <div>
+                        <div class="target-name" id="target-detail-name">🎯 Target Utama</div>
+                        <div class="target-amount" id="target-detail-amount">Belum ada target</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="btn btn-outline" onclick="openTargetModal()">Edit</button>
+                        <button class="btn btn-danger" onclick="deleteTarget()">Hapus</button>
+                    </div>
+                </div>
+                <div class="progress-wrapper">
+                    <div class="progress-info">
+                        <span id="target-detail-current">Rp 0</span>
+                        <span id="target-detail-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="target-detail-fill"></div>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-4 text-sm flex-wrap gap-2">
+                    <span class="text-muted" id="target-detail-remaining">Sisa: Rp 0</span>
+                    <span class="text-primary font-bold" id="target-detail-est">Estimasi: -</span>
+                </div>
+            </div>
+
+            <div class="glass p-6">
+                <h3 class="mb-4">🧮 Kalkulator Target</h3>
+                <p class="text-sm text-muted mb-4">Hitung berapa lama waktu yang dibutuhkan untuk mencapai target tabunganmu.</p>
+                <div class="grid gap-3" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <div class="form-group">
+                        <label>Target (Rp)</label>
+                        <input type="number" class="input" id="calc-target" placeholder="10000000" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Tabungan per Bulan (Rp)</label>
+                        <input type="number" class="input" id="calc-monthly" placeholder="500000" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Saldo Saat Ini (Rp)</label>
+                        <input type="number" class="input" id="calc-current" placeholder="0" min="0">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="calculateTarget()">Hitung Estimasi</button>
+                <div id="calc-result" class="mt-4 p-4 glass hidden"></div>
+            </div>
+        </div>
+
+        <!-- Calendar View -->
+        <div id="view-calendar" class="view hidden animate-fade">
+            <div class="glass calendar">
+                <div class="calendar-header">
+                    <button class="btn btn-outline" onclick="changeMonth(-1)">←</button>
+                    <h3 id="calendar-title">Juli 2026</h3>
+                    <button class="btn btn-outline" onclick="changeMonth(1)">→</button>
+                </div>
+                <div class="calendar-grid" id="calendar-grid"></div>
+            </div>
+            <div class="glass p-6 mt-4">
+                <h3 class="mb-4" id="selected-date-title">Transaksi Hari Ini</h3>
+                <div id="calendar-transactions" class="transaction-list"></div>
+            </div>
+        </div>
+
+        <!-- Stats View -->
+        <div id="view-stats" class="view hidden animate-fade">
+            <h2 class="mb-4">Statistik Keuangan</h2>
+            
+            <div class="stats-grid mb-4">
+                <div class="glass stat-card">
+                    <div class="stat-icon">💵</div>
+                    <div class="stat-label">Total Pemasukan</div>
+                    <div class="stat-value text-success" id="stats-total-income">Rp 0</div>
+                </div>
+                <div class="glass stat-card">
+                    <div class="stat-icon">💸</div>
+                    <div class="stat-label">Total Pengeluaran</div>
+                    <div class="stat-value text-danger" id="stats-total-expense">Rp 0</div>
+                </div>
+                <div class="glass stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-label">Total Tabungan</div>
+                    <div class="stat-value text-primary" id="stats-total-balance">Rp 0</div>
+                </div>
+                <div class="glass stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-label">Rasio Tabungan</div>
+                    <div class="stat-value text-warning" id="stats-ratio">0%</div>
+                </div>
+            </div>
+
+            <div class="glass chart-container">
+                <div class="chart-header">
+                    <h3>📊 Pemasukan vs Pengeluaran (12 Bulan)</h3>
+                </div>
+                <div class="chart-canvas-wrapper">
+                    <canvas id="statsChart"></canvas>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item"><div class="legend-dot" style="background: var(--success);"></div>Pemasukan</div>
+                    <div class="legend-item"><div class="legend-dot" style="background: var(--danger);"></div>Pengeluaran</div>
+                </div>
+            </div>
+
+            <div class="glass chart-container">
+                <div class="chart-header">
+                    <h3>🥧 Distribusi Kategori</h3>
+                </div>
+                <div class="chart-canvas-wrapper" style="height: 350px;">
+                    <canvas id="pieChart"></canvas>
+                </div>
+                <div class="chart-legend" id="pie-legend"></div>
+            </div>
+
+            <div class="glass p-6 mt-4">
+                <h3 class="mb-4">📋 Ringkasan Bulanan</h3>
+                <div id="monthly-summary"></div>
+            </div>
+        </div>
+
+        <!-- Achievements View -->
+        <div id="view-achievements" class="view hidden animate-fade">
+            <h2 class="mb-4">🏆 Pencapaian</h2>
+            <div class="glass p-6 mb-4">
+                <div class="flex justify-between items-center flex-wrap gap-2">
+                    <div>
+                        <div class="text-muted text-sm">Total Pencapaian</div>
+                        <div class="text-2xl font-bold" id="achievement-count">0 / 0</div>
+                    </div>
+                    <div>
+                        <div class="text-muted text-sm">Level Saat Ini</div>
+                        <div class="text-2xl font-bold text-primary" id="current-level">Level 1</div>
+                    </div>
+                </div>
+            </div>
+            <div class="achievements-grid" id="achievements-grid"></div>
+        </div>
+
+        <!-- Profile View -->
+        <div id="view-profile" class="view hidden animate-fade">
+            <div class="glass profile-header">
+                <div class="profile-avatar" id="profile-avatar">U</div>
+                <div class="profile-name" id="profile-name">User</div>
+                <div class="text-muted" id="profile-username">@username</div>
+                <div class="profile-level" id="profile-level">Level 1</div>
+            </div>
+
+            <div class="stats-grid mt-4">
+                <div class="glass stat-card">
+                    <div class="stat-label">Total Tabungan</div>
+                    <div class="stat-value text-primary" id="profile-balance">Rp 0</div>
+                </div>
+                <div class="glass stat-card">
+                    <div class="stat-label">Total Transaksi</div>
+                    <div class="stat-value" id="profile-trans-count">0</div>
+                </div>
+                <div class="glass stat-card">
+                    <div class="stat-label">Bergabung Sejak</div>
+                    <div class="stat-value text-sm" id="profile-joined">-</div>
+                </div>
+            </div>
+
+            <div class="glass p-6 mt-4">
+                <h3 class="mb-4">📝 Informasi Akun</h3>
+                <div class="grid gap-3" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div>
+                        <div class="text-muted text-sm">Nama Lengkap</div>
+                        <div class="font-bold" id="profile-display-name">-</div>
+                    </div>
+                    <div>
+                        <div class="text-muted text-sm">Username</div>
+                        <div class="font-bold" id="profile-display-username">-</div>
+                    </div>
+                    <div>
+                        <div class="text-muted text-sm">Total Pemasukan</div>
+                        <div class="font-bold text-success" id="profile-total-income">Rp 0</div>
+                    </div>
+                    <div>
+                        <div class="text-muted text-sm">Total Pengeluaran</div>
+                        <div class="font-bold text-danger" id="profile-total-expense">Rp 0</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass p-6 mt-4">
+                <h3 class="mb-4">✏️ Edit Profil</h3>
+                <div class="form-group">
+                    <label>Nama Lengkap</label>
+                    <input type="text" class="input" id="edit-name">
+                </div>
+                <button class="btn btn-primary" onclick="updateProfile()">Simpan Perubahan</button>
+            </div>
+
+            <div class="glass p-6 mt-4 no-print">
+                <h3 class="mb-4">🖨️ Cetak Laporan</h3>
+                <p class="text-sm text-muted mb-4">Cetak laporan tabunganmu untuk arsip pribadi.</p>
+                <button class="btn btn-primary" onclick="printReport()">📄 Cetak Laporan</button>
+            </div>
+        </div>
+
+        <!-- Settings View -->
+        <div id="view-settings" class="view hidden animate-fade">
+            <h2 class="mb-4">⚙️ Pengaturan</h2>
+
+            <div class="glass p-6 mb-4">
+                <h3 class="mb-4">👤 Akun</h3>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="input" id="setting-username" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Password Baru</label>
+                    <div class="input-wrapper">
+                        <input type="password" class="input" id="setting-password" placeholder="Kosongkan jika tidak diubah">
+                        <span class="input-icon" onclick="toggleSettingPassword()">👁️</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="updatePassword()">Ubah Password</button>
+            </div>
+
+            <div class="glass p-6 mb-4">
+                <h3 class="mb-4">💾 Data</h3>
+                <p class="text-sm text-muted mb-4">Ekspor atau impor data tabunganmu untuk backup.</p>
+                <div class="flex gap-2 flex-wrap">
+                    <button class="btn btn-success" onclick="exportData()">📥 Ekspor JSON</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">📤 Impor JSON</button>
+                    <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(this)">
+                </div>
+            </div>
+
+            <div class="glass p-6 mb-4">
+                <h3 class="mb-4">🎨 Tampilan</h3>
+                <div class="flex items-center justify-between">
+                    <div>
+                        <div class="font-bold">Mode Gelap</div>
+                        <div class="text-sm text-muted">Aktifkan tampilan gelap</div>
+                    </div>
+                    <button class="btn btn-outline" onclick="toggleTheme()" id="theme-toggle-btn">🌙 Aktifkan</button>
+                </div>
+            </div>
+
+            <div class="glass p-6">
+                <h3 class="mb-4 text-danger">⚠️ Zona Bahaya</h3>
+                <p class="text-sm text-muted mb-4">Tindakan ini tidak dapat dibatalkan.</p>
+                <button class="btn btn-danger" onclick="resetAllData()">🗑️ Reset Semua Data</button>
+            </div>
+        </div>
+
+        <footer class="footer">
+            <p>💰 SmartSave © 2026 - Tabungan Modern untuk Masa Depan Cerah</p>
+            <p class="text-xs mt-2">Dibuat dengan ❤️ menggunakan HTML, CSS, dan JavaScript Murni</p>
+        </footer>
+    </main>
+</section>
+
+<!-- ============ MODALS ============ -->
+
+<!-- Transaction Modal -->
+<div class="modal" id="trans-modal">
+    <div class="glass modal-content">
+        <div class="modal-header">
+            <div class="modal-title" id="trans-modal-title">Tambah Transaksi</div>
+            <button class="modal-close" onclick="closeModal('trans-modal')">✕</button>
+        </div>
+        <form id="trans-form">
+            <input type="hidden" id="trans-id">
+            <input type="hidden" id="trans-type">
+            <div class="form-group">
+                <label>Jenis Transaksi</label>
+                <input type="text" class="input" id="trans-type-display" disabled>
+            </div>
+            <div class="form-group">
+                <label>Nominal (Rp) *</label>
+                <input type="number" class="input" id="trans-amount" placeholder="0" min="1" required>
+            </div>
+            <div class="form-group">
+                <label>Kategori *</label>
+                <select class="select" id="trans-category" required></select>
+            </div>
+            <div class="form-group">
+                <label>Tanggal *</label>
+                <input type="date" class="input" id="trans-date" required>
+            </div>
+            <div class="form-group">
+                <label>Keterangan *</label>
+                <input type="text" class="input" id="trans-note" placeholder="Contoh: Tabungan bulanan" required maxlength="100">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('trans-modal')">Batal</button>
+                <button type="submit" class="btn btn-primary">Simpan</button>
+            </div>
+        </form>
+    </div>
 </div>
 
-
-
-
-
-<!-- DASHBOARD -->
-
-
-<div id="dashboard">
-
-
-<nav>
-
-<h2>Finance Manager</h2>
-
-<button class="logout" onclick="logout()">
-Logout
-</button>
-
-
-</nav>
-
-
-<div class="container-dashboard">
-
-
-
-<div class="cards">
-
-
-<div class="card">
-
-<h3>Saldo</h3>
-
-<p class="big" id="saldo">
-Rp 0
-</p>
-
+<!-- Target Modal -->
+<div class="modal" id="target-modal">
+    <div class="glass modal-content">
+        <div class="modal-header">
+            <div class="modal-title">🎯 Atur Target Tabungan</div>
+            <button class="modal-close" onclick="closeModal('target-modal')">✕</button>
+        </div>
+        <form id="target-form">
+            <div class="form-group">
+                <label>Nama Target *</label>
+                <input type="text" class="input" id="target-name" placeholder="Contoh: Liburan ke Bali" required maxlength="50">
+            </div>
+            <div class="form-group">
+                <label>Target Nominal (Rp) *</label>
+                <input type="number" class="input" id="target-amount" placeholder="10000000" min="1" required>
+            </div>
+            <div class="form-group">
+                <label>Tanggal Target (Opsional)</label>
+                <input type="date" class="input" id="target-deadline">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline" onclick="closeModal('target-modal')">Batal</button>
+                <button type="submit" class="btn btn-primary">Simpan Target</button>
+            </div>
+        </form>
+    </div>
 </div>
 
-
-
-<div class="card">
-
-<h3>Pemasukan</h3>
-
-<p class="big" id="income">
-Rp 0
-</p>
-
+<!-- Confirm Modal -->
+<div class="modal" id="confirm-modal">
+    <div class="glass modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <div class="modal-title" id="confirm-title">Konfirmasi</div>
+            <button class="modal-close" onclick="closeModal('confirm-modal')">✕</button>
+        </div>
+        <p id="confirm-message" class="mb-4">Apakah Anda yakin?</p>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('confirm-modal')">Batal</button>
+            <button class="btn btn-danger" id="confirm-btn">Ya, Lanjutkan</button>
+        </div>
+    </div>
 </div>
-
-
-
-
-<div class="card">
-
-<h3>Pengeluaran</h3>
-
-<p class="big" id="expense">
-Rp 0
-</p>
-
-</div>
-
-
-</div>
-
-
-
-
-<div class="card">
-
-
-<h2>Tambah Transaksi</h2>
-
-
-<select id="type">
-
-<option value="income">
-Pemasukan
-</option>
-
-
-<option value="expense">
-Pengeluaran
-</option>
-
-
-</select>
-
-
-<input id="name" placeholder="Nama transaksi">
-
-
-<input id="amount" type="number" placeholder="Jumlah">
-
-
-<select id="category">
-
-<option>
-Makanan
-</option>
-
-<option>
-Transportasi
-</option>
-
-<option>
-Belanja
-</option>
-
-<option>
-Tagihan
-</option>
-
-<option>
-Gaji
-</option>
-
-<option>
-Bisnis
-</option>
-
-<option>
-Lainnya
-</option>
-
-
-</select>
-
-
-
-<button onclick="addTransaction()">
-
-Tambah
-
-</button>
-
-
-
-</div>
-
-
-
-
-
-
-<div class="card">
-
-
-<h2>Target Tabungan</h2>
-
-
-<input id="target" type="number" placeholder="Target tabungan">
-
-
-<button onclick="saveTarget()">
-
-Simpan Target
-
-</button>
-
-
-<p id="targetText"></p>
-
-
-</div>
-
-
-
-
-
-
-<div class="card">
-
-
-<h2>Pencarian</h2>
-
-
-<input id="search" placeholder="Cari transaksi..." onkeyup="showData()">
-
-
-</div>
-
-
-
-
-
-
-<div class="card">
-
-
-<h2>Riwayat Transaksi</h2>
-
-
-<table>
-
-
-<thead>
-
-<tr>
-
-<th>Nama</th>
-<th>Kategori</th>
-<th>Jumlah</th>
-<th>Aksi</th>
-
-</tr>
-
-
-</thead>
-
-
-<tbody id="list">
-
-</tbody>
-
-
-</table>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="card">
-
-
-<h2>Grafik Keuangan</h2>
-
-
-<canvas id="chart"></canvas>
-
-
-</div>
-
-
-
-
-
-
-</div>
-
-
-</div>
-
-
-
-
 
 <script>
+/* ============ SMARTSAVE APP ============ */
+const App = {
+    state: {
+        users: [],
+        currentUser: null,
+        transactions: [],
+        target: null,
+        achievements: [],
+        settings: { theme: 'light' },
+        calendarDate: new Date()
+    },
 
+    CATEGORIES: {
+        income: ['Menabung', 'Gaji', 'Hadiah', 'Bonus', 'Lainnya'],
+        expense: ['Tarik Uang', 'Belanja', 'Tagihan', 'Lainnya']
+    },
 
-let currentUser="";
+    LEVELS: [
+        { level: 1, name: 'Pemula', min: 0, max: 999999, icon: '🌱' },
+        { level: 2, name: 'Penabung', min: 1000000, max: 4999999, icon: '🌿' },
+        { level: 3, name: 'Investor', min: 5000000, max: 19999999, icon: '🌳' },
+        { level: 4, name: 'Sultan', min: 20000000, max: 99999999, icon: '💎' },
+        { level: 5, name: 'Miliarder', min: 100000000, max: 999999999, icon: '👑' },
+        { level: 6, name: 'Triliuner', min: 1000000000, max: Infinity, icon: '🏆' }
+    ],
 
+    ACHIEVEMENTS: [
+        { id: 'first_save', name: 'Langkah Pertama', desc: 'Tambah transaksi pertama', icon: '🎯', check: (s) => s.transactions.length >= 1 },
+        { id: 'ten_trans', name: 'Rajin Menabung', desc: '10 transaksi', icon: '📝', check: (s) => s.transactions.length >= 10 },
+        { id: 'fifty_trans', name: 'Dedikasi Tinggi', desc: '50 transaksi', icon: '🏅', check: (s) => s.transactions.length >= 50 },
+        { id: 'save_1m', name: 'Jutawan', desc: 'Tabungan 1 juta', icon: '💵', check: () => App.getBalance() >= 1000000 },
+        { id: 'save_10m', name: 'Sepuluh Juta', desc: 'Tabungan 10 juta', icon: '💰', check: () => App.getBalance() >= 10000000 },
+        { id: 'save_100m', name: 'Seratus Juta', desc: 'Tabungan 100 juta', icon: '💎', check: () => App.getBalance() >= 100000000 },
+        { id: 'target_set', name: 'Perencana', desc: 'Buat target pertama', icon: '🎯', check: (s) => s.target !== null },
+        { id: 'target_hit', name: 'Pencapai Target', desc: 'Capai target tabungan', icon: '🏆', check: (s) => s.target && App.getBalance() >= s.target.amount },
+        { id: 'streak_7', name: 'Konsisten', desc: 'Menabung 7 hari berturut', icon: '🔥', check: () => App.checkStreak(7) },
+        { id: 'all_cat', name: 'Diversifikasi', desc: 'Pakai semua kategori', icon: '🌈', check: () => App.checkAllCategories() }
+    ],
 
-let users=JSON.parse(localStorage.getItem("users")) || {};
+    QUOTES: [
+        { text: "Menabung adalah jembatan menuju kebebasan finansial.", author: "Motivasi Keuangan" },
+        { text: "Jangan menabung apa yang tersisa setelah berbelanja, tapi belanjakan apa yang tersisa setelah menabung.", author: "Warren Buffett" },
+        { text: "Kekayaan bukan tentang berapa banyak uang yang kamu hasilkan, tapi berapa banyak yang kamu simpan.", author: "Robert Kiyosaki" },
+        { text: "Tabungan kecil hari ini adalah investasi besar di masa depan.", author: "Anonim" },
+        { text: "Disiplin menabung adalah kunci kesuksesan finansial.", author: "Motivasi" },
+        { text: "Setiap rupiah yang ditabung adalah langkah menuju impian.", author: "Anonim" },
+        { text: "Hidup sederhana, menabung dengan cerdas.", author: "Filosofi Finansial" },
+        { text: "Masa depan cerah dimulai dari keputusan menabung hari ini.", author: "Motivasi" }
+    ],
 
+    init() {
+        this.loadState();
+        this.setupEventListeners();
+        this.applyTheme();
+        
+        setTimeout(() => {
+            document.getElementById('loader').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('loader').classList.add('hidden');
+                if (this.state.currentUser) {
+                    this.showApp();
+                } else {
+                    this.showAuth();
+                }
+            }, 500);
+        }, 800);
+    },
 
+    loadState() {
+        try {
+            const saved = localStorage.getItem('smartsave_data');
+            if (saved) {
+                const data = JSON.parse(saved);
+                this.state.users = data.users || [];
+                this.state.currentUser = data.currentUser || null;
+                this.state.transactions = data.transactions || [];
+                this.state.target = data.target || null;
+                this.state.achievements = data.achievements || [];
+                this.state.settings = data.settings || { theme: 'light' };
+            }
+        } catch(e) { console.error('Load error:', e); }
+    },
 
-function register(){
+    saveState() {
+        try {
+            localStorage.setItem('smartsave_data', JSON.stringify({
+                users: this.state.users,
+                currentUser: this.state.currentUser,
+                transactions: this.state.transactions,
+                target: this.state.target,
+                achievements: this.state.achievements,
+                settings: this.state.settings
+            }));
+        } catch(e) { console.error('Save error:', e); }
+    },
 
+    applyTheme() {
+        document.body.setAttribute('data-theme', this.state.settings.theme);
+        const icon = document.getElementById('theme-icon');
+        const btn = document.getElementById('theme-toggle-btn');
+        if (icon) icon.textContent = this.state.settings.theme === 'dark' ? '☀️' : '🌙';
+        if (btn) btn.textContent = this.state.settings.theme === 'dark' ? '☀️ Mode Terang' : '🌙 Aktifkan';
+    },
 
-let u=document.getElementById("user").value;
+    setupEventListeners() {
+        document.getElementById('auth-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.handleAuth();
+        });
 
-let p=document.getElementById("pass").value;
+        document.getElementById('trans-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.saveTransaction();
+        });
 
+        document.getElementById('target-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            this.saveTarget();
+        });
 
+        // Ripple effect
+        document.addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn');
+            if (!btn) return;
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            const rect = btn.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+            ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+            btn.appendChild(ripple);
+            setTimeout(() => ripple.remove(), 600);
+        });
 
-if(!u || !p){
+        // Close modal on outside click
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) this.closeModal(modal.id);
+            });
+        });
 
-info.innerHTML="Isi semua data";
+        // ESC to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal.open').forEach(m => this.closeModal(m.id));
+            }
+        });
 
-return;
+        // Scroll to top button
+        window.addEventListener('scroll', () => {
+            const btn = document.getElementById('scroll-top');
+            if (window.scrollY > 300) btn.classList.add('show');
+            else btn.classList.remove('show');
+        });
+    },
 
-}
+    showAuth() {
+        document.getElementById('auth-section').classList.remove('hidden');
+        document.getElementById('app-section').classList.add('hidden');
+    },
 
+    showApp() {
+        document.getElementById('auth-section').classList.add('hidden');
+        document.getElementById('app-section').classList.remove('hidden');
+        this.updateUserDisplay();
+        this.navigate('dashboard');
+    },
 
+    handleAuth() {
+        const isRegister = document.getElementById('auth-submit').textContent === 'Daftar';
+        const username = document.getElementById('auth-username').value.trim();
+        const password = document.getElementById('auth-password').value;
+        const name = document.getElementById('auth-name').value.trim();
 
-if(users[u]){
+        if (!username || !password) {
+            this.toast('Username dan password wajib diisi', 'error');
+            return;
+        }
+        if (username.length < 3) {
+            this.toast('Username minimal 3 karakter', 'error');
+            return;
+        }
+        if (password.length < 4) {
+            this.toast('Password minimal 4 karakter', 'error');
+            return;
+        }
+        if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+            this.toast('Username hanya boleh huruf, angka, dan underscore', 'error');
+            return;
+        }
 
-info.innerHTML="Username sudah ada";
+        if (isRegister) {
+            if (!name) {
+                this.toast('Nama wajib diisi', 'error');
+                return;
+            }
+            if (this.state.users.find(u => u.username === username)) {
+                this.toast('Username sudah terdaftar', 'error');
+                return;
+            }
+            const newUser = {
+                username,
+                password,
+                name,
+                joined: new Date().toISOString(),
+                data: { transactions: [], target: null, achievements: [] }
+            };
+            this.state.users.push(newUser);
+            this.state.currentUser = newUser;
+            this.saveState();
+            this.toast('Registrasi berhasil! Selamat datang 🎉', 'success');
+            this.showApp();
+        } else {
+            const user = this.state.users.find(u => u.username === username && u.password === password);
+            if (!user) {
+                this.toast('Username atau password salah', 'error');
+                return;
+            }
+            this.state.currentUser = user;
+            this.state.transactions = user.data.transactions || [];
+            this.state.target = user.data.target || null;
+            this.state.achievements = user.data.achievements || [];
+            this.saveState();
+            this.toast(`Selamat datang kembali, ${user.name}! 👋`, 'success');
+            this.showApp();
+        }
+    },
 
-return;
+    logout() {
+        this.confirm('Yakin ingin keluar?', () => {
+            this.saveUserData();
+            this.state.currentUser = null;
+            this.state.transactions = [];
+            this.state.target = null;
+            this.state.achievements = [];
+            this.saveState();
+            this.toast('Berhasil keluar', 'info');
+            this.showAuth();
+            document.getElementById('auth-form').reset();
+        });
+    },
 
-}
+    saveUserData() {
+        if (!this.state.currentUser) return;
+        this.state.currentUser.data = {
+            transactions: this.state.transactions,
+            target: this.state.target,
+            achievements: this.state.achievements
+        };
+        this.saveState();
+    },
 
+    navigate(view) {
+        this.saveUserData();
+        
+        document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+        document.getElementById(`view-${view}`).classList.remove('hidden');
+        
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        const navItem = document.querySelector(`.nav-item[data-view="${view}"]`);
+        if (navItem) navItem.classList.add('active');
 
+        const titles = {
+            dashboard: ['Dashboard', 'Ringkasan keuanganmu hari ini'],
+            transactions: ['Transaksi', 'Kelola semua pemasukan dan pengeluaran'],
+            targets: ['Target Tabungan', 'Wujudkan impian finansialmu'],
+            calendar: ['Kalender', 'Lihat transaksi berdasarkan tanggal'],
+            stats: ['Statistik', 'Analisis keuanganmu secara mendalam'],
+            achievements: ['Pencapaian', 'Rayakan setiap langkah progresmu'],
+            profile: ['Profil', 'Informasi akun dan aktivitasmu'],
+            settings: ['Pengaturan', 'Kelola preferensi dan data']
+        };
+        
+        document.getElementById('page-title').textContent = titles[view][0];
+        document.getElementById('page-subtitle').textContent = titles[view][1];
 
-users[u]={
+        if (view === 'dashboard') this.renderDashboard();
+        else if (view === 'transactions') this.renderTransactions();
+        else if (view === 'targets') this.renderTargets();
+        else if (view === 'calendar') this.renderCalendar();
+        else if (view === 'stats') this.renderStats();
+        else if (view === 'achievements') this.renderAchievements();
+        else if (view === 'profile') this.renderProfile();
+        else if (view === 'settings') this.renderSettings();
 
-password:p,
+        if (window.innerWidth <= 768) this.closeSidebar();
+    },
 
-data:[],
+    renderDashboard() {
+        this.renderDailyQuote();
+        this.renderStatsCards();
+        this.renderTargetCard();
+        this.renderDashboardChart();
+        this.renderRecentTransactions();
+    },
 
-target:0
+    renderDailyQuote() {
+        const dayIndex = new Date().getDate() % this.QUOTES.length;
+        const quote = this.QUOTES[dayIndex];
+        document.getElementById('daily-quote').textContent = `"${quote.text}"`;
+        document.getElementById('daily-quote-author').textContent = `— ${quote.author}`;
+    },
 
+    renderStatsCards() {
+        const balance = this.getBalance();
+        const { income, expense, incomeCount, expenseCount } = this.getMonthlyStats();
+        const progress = this.getTargetProgress();
+
+        document.getElementById('stat-balance').textContent = this.formatCurrency(balance);
+        document.getElementById('stat-income').textContent = this.formatCurrency(income);
+        document.getElementById('stat-expense').textContent = this.formatCurrency(expense);
+        document.getElementById('stat-progress').textContent = progress.percent + '%';
+        
+        document.getElementById('stat-balance-change').textContent = `${this.state.transactions.length} total transaksi`;
+        document.getElementById('stat-income-count').textContent = `${incomeCount} transaksi`;
+        document.getElementById('stat-expense-count').textContent = `${expenseCount} transaksi`;
+        
+        if (this.state.target) {
+            const remaining = Math.max(0, this.state.target.amount - balance);
+            document.getElementById('stat-remaining').textContent = `Sisa: ${this.formatCurrency(remaining)}`;
+        } else {
+            document.getElementById('stat-remaining').textContent = 'Belum ada target';
+        }
+    },
+
+    renderTargetCard() {
+        const balance = this.getBalance();
+        const progress = this.getTargetProgress();
+        
+        if (this.state.target) {
+            document.getElementById('target-name-display').textContent = `🎯 ${this.state.target.name}`;
+            document.getElementById('target-amount-display').textContent = `Target: ${this.formatCurrency(this.state.target.amount)}`;
+            document.getElementById('target-current').textContent = this.formatCurrency(balance);
+            document.getElementById('target-percent').textContent = progress.percent + '%';
+            document.getElementById('target-fill').style.width = Math.min(100, progress.percent) + '%';
+            
+            const remaining = Math.max(0, this.state.target.amount - balance);
+            document.getElementById('target-remaining').textContent = `Sisa: ${this.formatCurrency(remaining)}`;
+            document.getElementById('target-estimation').textContent = `Estimasi: ${progress.estimation}`;
+        } else {
+            document.getElementById('target-name-display').textContent = '🎯 Target Tabungan';
+            document.getElementById('target-amount-display').textContent = 'Belum ada target. Buat target pertamamu!';
+            document.getElementById('target-current').textContent = 'Rp 0';
+            document.getElementById('target-percent').textContent = '0%';
+            document.getElementById('target-fill').style.width = '0%';
+            document.getElementById('target-remaining').textContent = 'Sisa: Rp 0';
+            document.getElementById('target-estimation').textContent = 'Estimasi: -';
+        }
+    },
+
+    renderRecentTransactions() {
+        const container = document.getElementById('recent-transactions');
+        const recent = [...this.state.transactions]
+            .sort((a, b) => new Date(b.date) - new Date(a.date))
+            .slice(0, 5);
+
+        if (recent.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">💳</div>
+                    <div class="empty-title">Belum ada transaksi</div>
+                    <div class="empty-desc">Mulai catat transaksi pertamamu!</div>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = recent.map(t => this.renderTransactionItem(t)).join('');
+    },
+
+    renderTransactionItem(t) {
+        const isIncome = t.type === 'income';
+        const icon = isIncome ? '📈' : '📉';
+        const sign = isIncome ? '+' : '-';
+        return `
+            <div class="transaction-item">
+                <div class="t-left">
+                    <div class="t-icon ${t.type}">${icon}</div>
+                    <div class="t-info">
+                        <h4>${this.escapeHtml(t.note)}</h4>
+                        <div class="t-meta">
+                            <span>${this.formatDate(t.date)}</span>
+                            <span>•</span>
+                            <span>${t.category}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="t-right">
+                    <div class="t-amount ${t.type}">${sign}${this.formatCurrency(t.amount)}</div>
+                </div>
+            </div>
+        `;
+    },
+
+    renderTransactions() {
+        const search = document.getElementById('search-trans').value.toLowerCase();
+        const typeFilter = document.getElementById('filter-type').value;
+        const catFilter = document.getElementById('filter-cat').value;
+        const dateFilter = document.getElementById('filter-date').value;
+        const sort = document.getElementById('sort-date').value;
+
+        let filtered = [...this.state.transactions];
+
+        if (search) {
+            filtered = filtered.filter(t => 
+                t.note.toLowerCase().includes(search) || 
+                t.amount.toString().includes(search) ||
+                t.category.toLowerCase().includes(search)
+            );
+        }
+        if (typeFilter) filtered = filtered.filter(t => t.type === typeFilter);
+        if (catFilter) filtered = filtered.filter(t => t.category === catFilter);
+        if (dateFilter) filtered = filtered.filter(t => t.date === dateFilter);
+
+        if (sort === 'newest') filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+        else if (sort === 'oldest') filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+        else if (sort === 'highest') filtered.sort((a, b) => b.amount - a.amount);
+        else if (sort === 'lowest') filtered.sort((a, b) => a.amount - b.amount);
+
+        const container = document.getElementById('transactions-list');
+        if (filtered.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">🔍</div>
+                    <div class="empty-title">Tidak ada transaksi</div>
+                    <div class="empty-desc">Coba ubah filter atau tambah transaksi baru</div>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = filtered.map(t => `
+            <div class="transaction-item">
+                <div class="t-left">
+                    <div class="t-icon ${t.type}">${t.type === 'income' ? '📈' : '📉'}</div>
+                    <div class="t-info">
+                        <h4>${this.escapeHtml(t.note)}</h4>
+                        <div class="t-meta">
+                            <span>${this.formatDate(t.date)}</span>
+                            <span>•</span>
+                            <span>${t.category}</span>
+                            <span>•</span>
+                            <span class="badge badge-${t.type}">${t.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="t-right">
+                    <div class="t-amount ${t.type}">${t.type === 'income' ? '+' : '-'}${this.formatCurrency(t.amount)}</div>
+                    <div class="t-actions">
+                        <button class="icon-btn" onclick="editTransaction('${t.id}')" data-tooltip="Edit">✏️</button>
+                        <button class="icon-btn danger" onclick="deleteTransaction('${t.id}')" data-tooltip="Hapus">🗑️</button>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    },
+
+    openTransModal(type, id = null) {
+        document.getElementById('trans-type').value = type;
+        document.getElementById('trans-type-display').value = type === 'income' ? '💰 Pemasukan' : '💸 Pengeluaran';
+        document.getElementById('trans-modal-title').textContent = id ? 'Edit Transaksi' : 'Tambah Transaksi';
+        
+        const catSelect = document.getElementById('trans-category');
+        catSelect.innerHTML = this.CATEGORIES[type].map(c => `<option value="${c}">${c}</option>`).join('');
+        
+        document.getElementById('trans-date').value = new Date().toISOString().split('T')[0];
+        
+        if (id) {
+            const t = this.state.transactions.find(tr => tr.id === id);
+            if (t) {
+                document.getElementById('trans-id').value = t.id;
+                document.getElementById('trans-amount').value = t.amount;
+                document.getElementById('trans-category').value = t.category;
+                document.getElementById('trans-date').value = t.date;
+                document.getElementById('trans-note').value = t.note;
+            }
+        } else {
+            document.getElementById('trans-form').reset();
+            document.getElementById('trans-id').value = '';
+            document.getElementById('trans-date').value = new Date().toISOString().split('T')[0];
+        }
+        
+        this.openModal('trans-modal');
+    },
+
+    saveTransaction() {
+        const id = document.getElementById('trans-id').value;
+        const type = document.getElementById('trans-type').value;
+        const amount = parseFloat(document.getElementById('trans-amount').value);
+        const category = document.getElementById('trans-category').value;
+        const date = document.getElementById('trans-date').value;
+        const note = document.getElementById('trans-note').value.trim();
+
+        if (!amount || amount <= 0) {
+            this.toast('Nominal harus lebih dari 0', 'error');
+            return;
+        }
+        if (!category) {
+            this.toast('Kategori wajib dipilih', 'error');
+            return;
+        }
+        if (!date) {
+            this.toast('Tanggal wajib diisi', 'error');
+            return;
+        }
+        if (!note) {
+            this.toast('Keterangan wajib diisi', 'error');
+            return;
+        }
+
+        if (type === 'expense' && !id) {
+            const balance = this.getBalance();
+            if (amount > balance) {
+                this.toast(`Saldo tidak mencukupi! Saldo: ${this.formatCurrency(balance)}`, 'error');
+                return;
+            }
+        }
+
+        if (id) {
+            const idx = this.state.transactions.findIndex(t => t.id === id);
+            if (idx !== -1) {
+                this.state.transactions[idx] = { ...this.state.transactions[idx], amount, category, date, note };
+                this.toast('Transaksi berhasil diperbarui ✅', 'success');
+            }
+        } else {
+            this.state.transactions.push({
+                id: 'tr_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
+                type, amount, category, date, note,
+                createdAt: new Date().toISOString()
+            });
+            this.toast(`${type === 'income' ? 'Pemasukan' : 'Pengeluaran'} berhasil ditambahkan 💰`, 'success');
+        }
+
+        this.saveState();
+        this.closeModal('trans-modal');
+        this.checkAchievements();
+        
+        if (this.state.target && this.getBalance() >= this.state.target.amount) {
+            if (!this.state.achievements.includes('target_hit')) {
+                setTimeout(() => {
+                    this.toast('🎉 SELAMAT! Target tabungan tercapai!', 'success');
+                }, 500);
+            }
+        }
+        
+        this.renderTransactions();
+        this.renderDashboard();
+    },
+
+    renderTargets() {
+        const balance = this.getBalance();
+        const progress = this.getTargetProgress();
+        
+        if (this.state.target) {
+            document.getElementById('target-detail-name').textContent = `🎯 ${this.state.target.name}`;
+            document.getElementById('target-detail-amount').textContent = `Target: ${this.formatCurrency(this.state.target.amount)}`;
+            document.getElementById('target-detail-current').textContent = this.formatCurrency(balance);
+            document.getElementById('target-detail-percent').textContent = progress.percent + '%';
+            document.getElementById('target-detail-fill').style.width = Math.min(100, progress.percent) + '%';
+            
+            const remaining = Math.max(0, this.state.target.amount - balance);
+            document.getElementById('target-detail-remaining').textContent = `Sisa: ${this.formatCurrency(remaining)}`;
+            document.getElementById('target-detail-est').textContent = `Estimasi: ${progress.estimation}`;
+        } else {
+            document.getElementById('target-detail-name').textContent = '🎯 Target Utama';
+            document.getElementById('target-detail-amount').textContent = 'Belum ada target. Buat target pertamamu!';
+            document.getElementById('target-detail-current').textContent = 'Rp 0';
+            document.getElementById('target-detail-percent').textContent = '0%';
+            document.getElementById('target-detail-fill').style.width = '0%';
+            document.getElementById('target-detail-remaining').textContent = 'Sisa: Rp 0';
+            document.getElementById('target-detail-est').textContent = 'Estimasi: -';
+        }
+    },
+
+    openTargetModal() {
+        if (this.state.target) {
+            document.getElementById('target-name').value = this.state.target.name;
+            document.getElementById('target-amount').value = this.state.target.amount;
+            document.getElementById('target-deadline').value = this.state.target.deadline || '';
+        } else {
+            document.getElementById('target-form').reset();
+        }
+        this.openModal('target-modal');
+    },
+
+    saveTarget() {
+        const name = document.getElementById('target-name').value.trim();
+        const amount = parseFloat(document.getElementById('target-amount').value);
+        const deadline = document.getElementById('target-deadline').value;
+
+        if (!name) {
+            this.toast('Nama target wajib diisi', 'error');
+            return;
+        }
+        if (!amount || amount <= 0) {
+            this.toast('Nominal target harus lebih dari 0', 'error');
+            return;
+        }
+
+        this.state.target = { name, amount, deadline };
+        this.saveState();
+        this.closeModal('target-modal');
+        this.toast('Target berhasil disimpan 🎯', 'success');
+        this.checkAchievements();
+        this.renderTargets();
+        this.renderDashboard();
+    },
+
+    deleteTarget() {
+        if (!this.state.target) {
+            this.toast('Belum ada target untuk dihapus', 'warning');
+            return;
+        }
+        this.confirm('Yakin ingin menghapus target ini?', () => {
+            this.state.target = null;
+            this.saveState();
+            this.toast('Target berhasil dihapus', 'success');
+            this.renderTargets();
+            this.renderDashboard();
+        });
+    },
+
+    calculateTarget() {
+        const target = parseFloat(document.getElementById('calc-target').value);
+        const monthly = parseFloat(document.getElementById('calc-monthly').value);
+        const current = parseFloat(document.getElementById('calc-current').value) || 0;
+
+        if (!target || target <= 0) {
+            this.toast('Target harus lebih dari 0', 'error');
+            return;
+        }
+        if (!monthly || monthly <= 0) {
+            this.toast('Tabungan per bulan harus lebih dari 0', 'error');
+            return;
+        }
+
+        const remaining = Math.max(0, target - current);
+        const months = Math.ceil(remaining / monthly);
+        const years = Math.floor(months / 12);
+        const remMonths = months % 12;
+
+        const resultDiv = document.getElementById('calc-result');
+        resultDiv.classList.remove('hidden');
+        
+        if (remaining === 0) {
+            resultDiv.innerHTML = `
+                <div class="text-success font-bold">🎉 Target sudah tercapai!</div>
+                <div class="text-sm text-muted mt-2">Saldo saat ini sudah melebihi target.</div>
+            `;
+        } else {
+            let timeText = '';
+            if (years > 0) timeText += `${years} tahun `;
+            if (remMonths > 0) timeText += `${remMonths} bulan`;
+            if (!timeText) timeText = 'kurang dari 1 bulan';
+
+            const targetDate = new Date();
+            targetDate.setMonth(targetDate.getMonth() + months);
+
+            resultDiv.innerHTML = `
+                <div class="font-bold mb-2">📊 Hasil Perhitungan</div>
+                <div class="text-sm">Sisa yang harus ditabung: <strong class="text-primary">${this.formatCurrency(remaining)}</strong></div>
+                <div class="text-sm">Waktu yang dibutuhkan: <strong class="text-primary">${timeText.trim()}</strong> (${months} bulan)</div>
+                <div class="text-sm">Target tercapai pada: <strong class="text-success">${this.formatDate(targetDate.toISOString().split('T')[0])}</strong></div>
+            `;
+        }
+    },
+
+    renderCalendar() {
+        const date = this.state.calendarDate;
+        const year = date.getFullYear();
+        const month = date.getMonth();
+        const monthNames = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        
+        document.getElementById('calendar-title').textContent = `${monthNames[month]} ${year}`;
+        
+        const firstDay = new Date(year, month, 1).getDay();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const daysInPrevMonth = new Date(year, month, 0).getDate();
+        
+        const today = new Date();
+        const todayStr = today.toISOString().split('T')[0];
+        
+        const transByDate = {};
+        this.state.transactions.forEach(t => {
+            if (!transByDate[t.date]) transByDate[t.date] = [];
+            transByDate[t.date].push(t);
+        });
+        
+        let html = '';
+        const dayNames = ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'];
+        dayNames.forEach(d => html += `<div class="calendar-day-name">${d}</div>`);
+        
+        for (let i = firstDay - 1; i >= 0; i--) {
+            const day = daysInPrevMonth - i;
+            html += `<div class="calendar-day other-month">${day}</div>`;
+        }
+        
+        for (let day = 1; day <= daysInMonth; day++) {
+            const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+            const isToday = dateStr === todayStr;
+            const hasTrans = transByDate[dateStr] && transByDate[dateStr].length > 0;
+            const classes = ['calendar-day'];
+            if (isToday) classes.push('today');
+            if (hasTrans) classes.push('has-trans');
+            html += `<div class="${classes.join(' ')}" onclick="selectCalendarDate('${dateStr}')">${day}</div>`;
+        }
+        
+        const totalCells = firstDay + daysInMonth;
+        const remaining = 7 - (totalCells % 7);
+        if (remaining < 7) {
+            for (let i = 1; i <= remaining; i++) {
+                html += `<div class="calendar-day other-month">${i}</div>`;
+            }
+        }
+        
+        document.getElementById('calendar-grid').innerHTML = html;
+        this.showCalendarTransactions(todayStr);
+    },
+
+    showCalendarTransactions(dateStr) {
+        const trans = this.state.transactions.filter(t => t.date === dateStr);
+        document.getElementById('selected-date-title').textContent = `Transaksi ${this.formatDate(dateStr)}`;
+        const container = document.getElementById('calendar-transactions');
+        
+        if (trans.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">📅</div>
+                    <div class="empty-title">Tidak ada transaksi</div>
+                    <div class="empty-desc">Tidak ada transaksi pada tanggal ini</div>
+                </div>`;
+            return;
+        }
+        
+        container.innerHTML = trans.map(t => this.renderTransactionItem(t)).join('');
+    },
+
+    selectCalendarDate(dateStr) {
+        this.showCalendarTransactions(dateStr);
+    },
+
+    changeMonth(delta) {
+        this.state.calendarDate.setMonth(this.state.calendarDate.getMonth() + delta);
+        this.renderCalendar();
+    },
+
+    renderStats() {
+        const totalIncome = this.state.transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+        const totalExpense = this.state.transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+        const balance = this.getBalance();
+        const ratio = totalIncome > 0 ? Math.round(((totalIncome - totalExpense) / totalIncome) * 100) : 0;
+
+        document.getElementById('stats-total-income').textContent = this.formatCurrency(totalIncome);
+        document.getElementById('stats-total-expense').textContent = this.formatCurrency(totalExpense);
+        document.getElementById('stats-total-balance').textContent = this.formatCurrency(balance);
+        document.getElementById('stats-ratio').textContent = ratio + '%';
+
+        this.renderStatsChart();
+        this.renderPieChart();
+        this.renderMonthlySummary();
+    },
+
+    renderMonthlySummary() {
+        const monthly = {};
+        this.state.transactions.forEach(t => {
+            const month = t.date.substring(0, 7);
+            if (!monthly[month]) monthly[month] = { income: 0, expense: 0 };
+            if (t.type === 'income') monthly[month].income += t.amount;
+            else monthly[month].expense += t.amount;
+        });
+
+        const sorted = Object.entries(monthly).sort((a, b) => b[0].localeCompare(a[0])).slice(0, 6);
+        const container = document.getElementById('monthly-summary');
+
+        if (sorted.length === 0) {
+            container.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-desc">Belum ada data</div></div>';
+            return;
+        }
+
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        container.innerHTML = sorted.map(([month, data]) => {
+            const [y, m] = month.split('-');
+            const net = data.income - data.expense;
+            return `
+                <div class="transaction-item">
+                    <div class="t-left">
+                        <div class="t-info">
+                            <h4>${monthNames[parseInt(m)-1]} ${y}</h4>
+                            <div class="t-meta">
+                                <span class="text-success">+${this.formatCurrency(data.income)}</span>
+                                <span>•</span>
+                                <span class="text-danger">-${this.formatCurrency(data.expense)}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="t-right">
+                        <div class="t-amount ${net >= 0 ? 'income' : 'expense'}">${net >= 0 ? '+' : ''}${this.formatCurrency(net)}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    },
+
+    renderAchievements() {
+        const grid = document.getElementById('achievements-grid');
+        const unlocked = this.state.achievements.length;
+        const total = this.ACHIEVEMENTS.length;
+        
+        document.getElementById('achievement-count').textContent = `${unlocked} / ${total}`;
+        document.getElementById('current-level').textContent = this.getLevel().icon + ' Level ' + this.getLevel().level;
+
+        grid.innerHTML = this.ACHIEVEMENTS.map(a => {
+            const isUnlocked = this.state.achievements.includes(a.id);
+            return `
+                <div class="glass achievement-card ${isUnlocked ? 'unlocked' : 'locked'}">
+                    ${isUnlocked ? '<div class="achievement-badge">✓ UNLOCKED</div>' : ''}
+                    <div class="achievement-icon">${a.icon}</div>
+                    <div class="achievement-name">${a.name}</div>
+                    <div class="achievement-desc">${a.desc}</div>
+                </div>
+            `;
+        }).join('');
+    },
+
+    checkAchievements() {
+        const state = {
+            transactions: this.state.transactions,
+            target: this.state.target,
+            achievements: this.state.achievements
+        };
+
+        let newAchievements = [];
+        this.ACHIEVEMENTS.forEach(a => {
+            if (!this.state.achievements.includes(a.id) && a.check(state)) {
+                this.state.achievements.push(a.id);
+                newAchievements.push(a);
+            }
+        });
+
+        if (newAchievements.length > 0) {
+            this.saveState();
+            newAchievements.forEach((a, i) => {
+                setTimeout(() => {
+                    this.toast(`🏆 Pencapaian Baru: ${a.name}!`, 'success');
+                }, i * 800);
+            });
+        }
+    },
+
+    checkStreak(days) {
+        const dates = [...new Set(this.state.transactions.filter(t => t.type === 'income').map(t => t.date))].sort();
+        if (dates.length < days) return false;
+        
+        let streak = 1;
+        for (let i = 1; i < dates.length; i++) {
+            const prev = new Date(dates[i-1]);
+            const curr = new Date(dates[i]);
+            const diff = (curr - prev) / (1000 * 60 * 60 * 24);
+            if (diff === 1) {
+                streak++;
+                if (streak >= days) return true;
+            } else {
+                streak = 1;
+            }
+        }
+        return false;
+    },
+
+    checkAllCategories() {
+        const allCats = [...this.CATEGORIES.income, ...this.CATEGORIES.expense];
+        const usedCats = new Set(this.state.transactions.map(t => t.category));
+        return allCats.every(c => usedCats.has(c));
+    },
+
+    renderProfile() {
+        const user = this.state.currentUser;
+        const balance = this.getBalance();
+        const totalIncome = this.state.transactions.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+        const totalExpense = this.state.transactions.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+        const level = this.getLevel();
+
+        document.getElementById('profile-avatar').textContent = user.name.charAt(0).toUpperCase();
+        document.getElementById('profile-name').textContent = user.name;
+        document.getElementById('profile-username').textContent = '@' + user.username;
+        document.getElementById('profile-level').textContent = level.icon + ' Level ' + level.level + ' - ' + level.name;
+        
+        document.getElementById('profile-balance').textContent = this.formatCurrency(balance);
+        document.getElementById('profile-trans-count').textContent = this.state.transactions.length;
+        document.getElementById('profile-joined').textContent = this.formatDate(user.joined.split('T')[0]);
+        
+        document.getElementById('profile-display-name').textContent = user.name;
+        document.getElementById('profile-display-username').textContent = user.username;
+        document.getElementById('profile-total-income').textContent = this.formatCurrency(totalIncome);
+        document.getElementById('profile-total-expense').textContent = this.formatCurrency(totalExpense);
+        
+        document.getElementById('edit-name').value = user.name;
+    },
+
+    updateProfile() {
+        const newName = document.getElementById('edit-name').value.trim();
+        if (!newName) {
+            this.toast('Nama tidak boleh kosong', 'error');
+            return;
+        }
+        
+        const user = this.state.currentUser;
+        user.name = newName;
+        
+        const idx = this.state.users.findIndex(u => u.username === user.username);
+        if (idx !== -1) this.state.users[idx].name = newName;
+        
+        this.state.currentUser = user;
+        this.saveState();
+        this.updateUserDisplay();
+        this.toast('Profil berhasil diperbarui ✅', 'success');
+        this.renderProfile();
+    },
+
+    printReport() {
+        window.print();
+    },
+
+    renderSettings() {
+        document.getElementById('setting-username').value = this.state.currentUser.username;
+    },
+
+    updatePassword() {
+        const newPass = document.getElementById('setting-password').value;
+        if (!newPass) {
+            this.toast('Password baru tidak boleh kosong', 'error');
+            return;
+        }
+        if (newPass.length < 4) {
+            this.toast('Password minimal 4 karakter', 'error');
+            return;
+        }
+        
+        const user = this.state.currentUser;
+        user.password = newPass;
+        
+        const idx = this.state.users.findIndex(u => u.username === user.username);
+        if (idx !== -1) this.state.users[idx].password = newPass;
+        
+        this.state.currentUser = user;
+        this.saveState();
+        document.getElementById('setting-password').value = '';
+        this.toast('Password berhasil diubah 🔐', 'success');
+    },
+
+    exportData() {
+        const data = {
+            user: { username: this.state.currentUser.username, name: this.state.currentUser.name },
+            transactions: this.state.transactions,
+            target: this.state.target,
+            achievements: this.state.achievements,
+            exportDate: new Date().toISOString()
+        };
+        
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `smartsave_backup_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        this.toast('Data berhasil diekspor 📥', 'success');
+    },
+
+    importData(input) {
+        const file = input.files[0];
+        if (!file) return;
+        
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                if (!data.transactions || !Array.isArray(data.transactions)) {
+                    throw new Error('Format tidak valid');
+                }
+                
+                this.confirm('Impor akan mengganti data saat ini. Lanjutkan?', () => {
+                    this.state.transactions = data.transactions;
+                    this.state.target = data.target || null;
+                    this.state.achievements = data.achievements || [];
+                    this.saveState();
+                    this.toast('Data berhasil diimpor 📤', 'success');
+                    this.navigate('dashboard');
+                });
+            } catch(err) {
+                this.toast('File tidak valid: ' + err.message, 'error');
+            }
+        };
+        reader.readAsText(file);
+        input.value = '';
+    },
+
+    resetAllData() {
+        this.confirm('⚠️ PERINGATAN: Semua transaksi, target, dan pencapaian akan dihapus permanen. Lanjutkan?', () => {
+            this.state.transactions = [];
+            this.state.target = null;
+            this.state.achievements = [];
+            this.saveState();
+            this.toast('Semua data berhasil direset', 'success');
+            this.navigate('dashboard');
+        });
+    },
+
+    renderDashboardChart() {
+        const canvas = document.getElementById('dashboardChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const months = parseInt(document.getElementById('chart-period').value);
+        
+        const data = this.getMonthlyData(months);
+        this.drawLineChart(ctx, canvas, data);
+    },
+
+    renderStatsChart() {
+        const canvas = document.getElementById('statsChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const data = this.getMonthlyData(12);
+        this.drawBarChart(ctx, canvas, data);
+    },
+
+    renderPieChart() {
+        const canvas = document.getElementById('pieChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        
+        const categoryData = {};
+        this.state.transactions.forEach(t => {
+            if (!categoryData[t.category]) categoryData[t.category] = 0;
+            categoryData[t.category] += t.amount;
+        });
+        
+        const entries = Object.entries(categoryData).sort((a, b) => b[1] - a[1]);
+        const total = entries.reduce((s, [, v]) => s + v, 0);
+        
+        if (total === 0) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--muted');
+            ctx.font = '14px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('Belum ada data', canvas.width/2, canvas.height/2);
+            document.getElementById('pie-legend').innerHTML = '';
+            return;
+        }
+        
+        const colors = ['#4f46e5', '#06b6d4', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#14b8a6'];
+        
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * window.devicePixelRatio;
+        canvas.height = rect.height * window.devicePixelRatio;
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const radius = Math.min(centerX, centerY) - 20;
+        
+        ctx.clearRect(0, 0, rect.width, rect.height);
+        
+        let startAngle = -Math.PI / 2;
+        entries.forEach(([cat, val], i) => {
+            const sliceAngle = (val / total) * Math.PI * 2;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, startAngle, startAngle + sliceAngle);
+            ctx.closePath();
+            ctx.fillStyle = colors[i % colors.length];
+            ctx.fill();
+            ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--glass');
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            startAngle += sliceAngle;
+        });
+        
+        ctx.beginPath();
+        ctx.arc(centerX, centerY, radius * 0.55, 0, Math.PI * 2);
+        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--glass');
+        ctx.fill();
+        
+        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--text');
+        ctx.font = 'bold 18px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.formatCurrency(total), centerX, centerY - 8);
+        ctx.font = '12px sans-serif';
+        ctx.fillStyle = getComputedStyle(document.body).getPropertyValue('--muted');
+        ctx.fillText('Total', centerX, centerY + 12);
+        
+        document.getElementById('pie-legend').innerHTML = entries.map(([cat, val], i) => {
+            const percent = Math.round((val / total) * 100);
+            return `<div class="legend-item"><div class="legend-dot" style="background: ${colors[i % colors.length]};"></div>${cat} (${percent}%)</div>`;
+        }).join('');
+    },
+
+    getMonthlyData(months) {
+        const data = [];
+        const now = new Date();
+        
+        for (let i = months - 1; i >= 0; i--) {
+            const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+            const monthStr = `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}`;
+            const monthTrans = this.state.transactions.filter(t => t.date.startsWith(monthStr));
+            const income = monthTrans.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+            const expense = monthTrans.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+            
+            data.push({
+                label: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'][date.getMonth()],
+                income, expense, net: income - expense
+            });
+        }
+        
+        return data;
+    },
+
+    drawLineChart(ctx, canvas, data) {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * window.devicePixelRatio;
+        canvas.height = rect.height * window.devicePixelRatio;
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        
+        const width = rect.width;
+        const height = rect.height;
+        const padding = { top: 20, right: 20, bottom: 40, left: 60 };
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+        
+        ctx.clearRect(0, 0, width, height);
+        
+        const allValues = data.flatMap(d => [d.income, d.expense, Math.abs(d.net)]);
+        const maxVal = Math.max(...allValues, 1);
+        
+        const mutedColor = getComputedStyle(document.body).getPropertyValue('--muted');
+        const borderColor = getComputedStyle(document.body).getPropertyValue('--border');
+        
+        ctx.strokeStyle = borderColor;
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 4; i++) {
+            const y = padding.top + (chartHeight / 4) * i;
+            ctx.beginPath();
+            ctx.moveTo(padding.left, y);
+            ctx.lineTo(width - padding.right, y);
+            ctx.stroke();
+            
+            ctx.fillStyle = mutedColor;
+            ctx.font = '11px sans-serif';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            const val = maxVal - (maxVal / 4) * i;
+            ctx.fillText(this.formatShortCurrency(val), padding.left - 8, y);
+        }
+        
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        data.forEach((d, i) => {
+            const x = padding.left + (chartWidth / (data.length - 1 || 1)) * i;
+            ctx.fillStyle = mutedColor;
+            ctx.fillText(d.label, x, height - padding.bottom + 10);
+        });
+        
+        const drawLine = (key, color) => {
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 2.5;
+            ctx.beginPath();
+            data.forEach((d, i) => {
+                const x = padding.left + (chartWidth / (data.length - 1 || 1)) * i;
+                const y = padding.top + chartHeight - (d[key] / maxVal) * chartHeight;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.stroke();
+            
+            data.forEach((d, i) => {
+                const x = padding.left + (chartWidth / (data.length - 1 || 1)) * i;
+                const y = padding.top + chartHeight - (d[key] / maxVal) * chartHeight;
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--glass');
+                ctx.lineWidth = 2;
+                ctx.stroke();
+            });
+        };
+        
+        drawLine('income', '#10b981');
+        drawLine('expense', '#ef4444');
+        drawLine('net', '#4f46e5');
+    },
+
+    drawBarChart(ctx, canvas, data) {
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * window.devicePixelRatio;
+        canvas.height = rect.height * window.devicePixelRatio;
+        ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        
+        const width = rect.width;
+        const height = rect.height;
+        const padding = { top: 20, right: 20, bottom: 40, left: 60 };
+        const chartWidth = width - padding.left - padding.right;
+        const chartHeight = height - padding.top - padding.bottom;
+        
+        ctx.clearRect(0, 0, width, height);
+        
+        const maxVal = Math.max(...data.flatMap(d => [d.income, d.expense]), 1);
+        
+        const mutedColor = getComputedStyle(document.body).getPropertyValue('--muted');
+        const borderColor = getComputedStyle(document.body).getPropertyValue('--border');
+        
+        ctx.strokeStyle = borderColor;
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= 4; i++) {
+            const y = padding.top + (chartHeight / 4) * i;
+            ctx.beginPath();
+            ctx.moveTo(padding.left, y);
+            ctx.lineTo(width - padding.right, y);
+            ctx.stroke();
+            
+            ctx.fillStyle = mutedColor;
+            ctx.font = '11px sans-serif';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            const val = maxVal - (maxVal / 4) * i;
+            ctx.fillText(this.formatShortCurrency(val), padding.left - 8, y);
+        }
+        
+        const groupWidth = chartWidth / data.length;
+        const barWidth = groupWidth * 0.35;
+        const gap = groupWidth * 0.1;
+        
+        data.forEach((d, i) => {
+            const groupX = padding.left + groupWidth * i + gap;
+            
+            const incomeHeight = (d.income / maxVal) * chartHeight;
+            const gradient1 = ctx.createLinearGradient(0, padding.top + chartHeight - incomeHeight, 0, padding.top + chartHeight);
+            gradient1.addColorStop(0, '#10b981');
+            gradient1.addColorStop(1, '#059669');
+            ctx.fillStyle = gradient1;
+            ctx.fillRect(groupX, padding.top + chartHeight - incomeHeight, barWidth, incomeHeight);
+            
+            const expenseHeight = (d.expense / maxVal) * chartHeight;
+            const gradient2 = ctx.createLinearGradient(0, padding.top + chartHeight - expenseHeight, 0, padding.top + chartHeight);
+            gradient2.addColorStop(0, '#ef4444');
+            gradient2.addColorStop(1, '#dc2626');
+            ctx.fillStyle = gradient2;
+            ctx.fillRect(groupX + barWidth + 4, padding.top + chartHeight - expenseHeight, barWidth, expenseHeight);
+            
+            ctx.fillStyle = mutedColor;
+            ctx.font = '11px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'top';
+            ctx.fillText(d.label, groupX + barWidth + 2, height - padding.bottom + 10);
+        });
+    },
+
+    getBalance() {
+        return this.state.transactions.reduce((sum, t) => {
+            return sum + (t.type === 'income' ? t.amount : -t.amount);
+        }, 0);
+    },
+
+    getMonthlyStats() {
+        const now = new Date();
+        const monthStr = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+        const monthTrans = this.state.transactions.filter(t => t.date.startsWith(monthStr));
+        
+        const income = monthTrans.filter(t => t.type === 'income').reduce((s, t) => s + t.amount, 0);
+        const expense = monthTrans.filter(t => t.type === 'expense').reduce((s, t) => s + t.amount, 0);
+        
+        return {
+            income, expense,
+            incomeCount: monthTrans.filter(t => t.type === 'income').length,
+            expenseCount: monthTrans.filter(t => t.type === 'expense').length
+        };
+    },
+
+    getTargetProgress() {
+        if (!this.state.target) return { percent: 0, estimation: '-' };
+        
+        const balance = this.getBalance();
+        const percent = Math.min(100, Math.round((balance / this.state.target.amount) * 100));
+        
+        const now = new Date();
+        const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
+        const recentTrans = this.state.transactions.filter(t => 
+            t.type === 'income' && new Date(t.date) >= sixMonthsAgo
+        );
+        const totalIncome = recentTrans.reduce((s, t) => s + t.amount, 0);
+        const totalExpense = this.state.transactions.filter(t => 
+            t.type === 'expense' && new Date(t.date) >= sixMonthsAgo
+        ).reduce((s, t) => s + t.amount, 0);
+        
+        const avgMonthly = (totalIncome - totalExpense) / 6;
+        const remaining = Math.max(0, this.state.target.amount - balance);
+        
+        let estimation = '-';
+        if (avgMonthly > 0 && remaining > 0) {
+            const months = Math.ceil(remaining / avgMonthly);
+            const years = Math.floor(months / 12);
+            const remMonths = months % 12;
+            estimation = '';
+            if (years > 0) estimation += `${years} tahun `;
+            if (remMonths > 0) estimation += `${remMonths} bulan`;
+            if (!estimation) estimation = 'kurang dari 1 bulan';
+        } else if (remaining === 0) {
+            estimation = '🎉 Tercapai!';
+        }
+        
+        return { percent, estimation };
+    },
+
+    getLevel() {
+        const balance = this.getBalance();
+        return this.LEVELS.find(l => balance >= l.min && balance < l.max) || this.LEVELS[0];
+    },
+
+    updateUserDisplay() {
+        const user = this.state.currentUser;
+        if (!user) return;
+        
+        document.getElementById('header-name').textContent = user.name;
+        const level = this.getLevel();
+        document.getElementById('header-level').textContent = level.icon + ' Level ' + level.level;
+        document.getElementById('header-avatar').textContent = user.name.charAt(0).toUpperCase();
+    },
+
+    formatCurrency(num) {
+        return 'Rp ' + Math.round(num).toLocaleString('id-ID');
+    },
+
+    formatShortCurrency(num) {
+        if (num >= 1000000) return (num / 1000000).toFixed(1) + 'jt';
+        if (num >= 1000) return (num / 1000).toFixed(0) + 'rb';
+        return num.toString();
+    },
+
+    formatDate(dateStr) {
+        const date = new Date(dateStr);
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+        return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
+    },
+
+    escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    },
+
+    openModal(id) { document.getElementById(id).classList.add('open'); },
+    closeModal(id) { document.getElementById(id).classList.remove('open'); },
+    
+    confirm(message, onConfirm) {
+        document.getElementById('confirm-message').textContent = message;
+        const btn = document.getElementById('confirm-btn');
+        const newBtn = btn.cloneNode(true);
+        btn.parentNode.replaceChild(newBtn, btn);
+        newBtn.addEventListener('click', () => {
+            onConfirm();
+            this.closeModal('confirm-modal');
+        });
+        this.openModal('confirm-modal');
+    },
+
+    toast(message, type = 'info') {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+        toast.innerHTML = `
+            <div>${icons[type]}</div>
+            <div style="flex:1;">${message}</div>
+        `;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.animation = 'slideInRight 0.3s reverse';
+            setTimeout(() => toast.remove(), 300);
+        }, 3500);
+    },
+
+    toggleTheme() {
+        this.state.settings.theme = this.state.settings.theme === 'light' ? 'dark' : 'light';
+        this.saveState();
+        this.applyTheme();
+        const currentView = document.querySelector('.view:not(.hidden)');
+        if (currentView) {
+            const viewId = currentView.id.replace('view-', '');
+            setTimeout(() => this.navigate(viewId), 100);
+        }
+    }
 };
 
-
-localStorage.setItem("users",JSON.stringify(users));
-
-
-info.innerHTML="Register berhasil";
-
-
-
+// ============ GLOBAL FUNCTIONS ============
+function toggleAuthMode() {
+    const isRegister = document.getElementById('auth-submit').textContent === 'Masuk';
+    document.getElementById('auth-submit').textContent = isRegister ? 'Daftar' : 'Masuk';
+    document.getElementById('auth-switch-text').textContent = isRegister ? 'Sudah punya akun?' : 'Belum punya akun?';
+    document.getElementById('auth-toggle-btn').textContent = isRegister ? 'Masuk' : 'Daftar';
+    document.getElementById('name-group').style.display = isRegister ? 'block' : 'none';
+    document.getElementById('auth-subtitle').textContent = isRegister ? 'Buat akun baru untuk mulai menabung' : 'Masuk ke akun SmartSave-mu';
 }
 
-
-
-
-function login(){
-
-
-let u=user.value;
-
-let p=pass.value;
-
-
-
-if(users[u] && users[u].password==p){
-
-
-currentUser=u;
-
-
-loginPage.style.display="none";
-
-dashboard.style.display="block";
-
-
-load();
-
-
+function togglePassword() {
+    const input = document.getElementById('auth-password');
+    input.type = input.type === 'password' ? 'text' : 'password';
 }
 
-else{
-
-info.innerHTML="Login gagal";
-
+function toggleSettingPassword() {
+    const input = document.getElementById('setting-password');
+    input.type = input.type === 'password' ? 'text' : 'password';
 }
 
-
-
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebar-overlay').classList.toggle('show');
 }
 
-
-
-function logout(){
-
-location.reload();
-
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('show');
 }
 
+function navigate(view) { App.navigate(view); }
+function openTransModal(type) { App.openTransModal(type); }
+function editTransaction(id) { App.openTransModal(null, id); }
+function deleteTransaction(id) {
+    App.confirm('Yakin ingin menghapus transaksi ini?', () => {
+        App.state.transactions = App.state.transactions.filter(t => t.id !== id);
+        App.saveState();
+        App.toast('Transaksi berhasil dihapus 🗑️', 'success');
+        App.renderTransactions();
+        App.renderDashboard();
+    });
+}
+function openTargetModal() { App.openTargetModal(); }
+function deleteTarget() { App.deleteTarget(); }
+function calculateTarget() { App.calculateTarget(); }
+function changeMonth(delta) { App.changeMonth(delta); }
+function selectCalendarDate(dateStr) { App.selectCalendarDate(dateStr); }
+function updateProfile() { App.updateProfile(); }
+function updatePassword() { App.updatePassword(); }
+function exportData() { App.exportData(); }
+function importData(input) { App.importData(input); }
+function resetAllData() { App.resetAllData(); }
+function printReport() { App.printReport(); }
+function toggleTheme() { App.toggleTheme(); }
+function logout() { App.logout(); }
+function renderDashboardChart() { App.renderDashboardChart(); }
 
+// Start App
+document.addEventListener('DOMContentLoaded', () => App.init());
 
-function addTransaction(){
-
-
-let data=users[currentUser].data;
-
-
-
-data.push({
-
-name:name.value,
-
-type:type.value,
-
-amount:Number(amount.value),
-
-category:category.value
-
-
+// Handle window resize for charts
+let resizeTimeout;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+        const currentView = document.querySelector('.view:not(.hidden)');
+        if (currentView) {
+            const viewId = currentView.id.replace('view-', '');
+            if (viewId === 'dashboard') App.renderDashboardChart();
+            else if (viewId === 'stats') { App.renderStatsChart(); App.renderPieChart(); }
+        }
+    }, 250);
 });
-
-
-
-save();
-
-
-name.value="";
-
-amount.value="";
-
-
-load();
-
-
-}
-
-
-
-function save(){
-
-localStorage.setItem("users",JSON.stringify(users));
-
-}
-
-
-
-function load(){
-
-
-let data=users[currentUser].data;
-
-
-let income=0;
-
-let expense=0;
-
-
-data.forEach(x=>{
-
-
-if(x.type=="income")
-
-income+=x.amount;
-
-else
-
-expense+=x.amount;
-
-
-});
-
-
-
-document.getElementById("income").innerHTML=
-"Rp "+income.toLocaleString();
-
-
-document.getElementById("expense").innerHTML=
-"Rp "+expense.toLocaleString();
-
-
-
-document.getElementById("saldo").innerHTML=
-"Rp "+(income-expense).toLocaleString();
-
-
-
-showData();
-
-chart(income,expense);
-
-
-targetText.innerHTML=
-"Target : Rp "+users[currentUser].target.toLocaleString();
-
-
-
-}
-
-
-
-
-function showData(){
-
-
-let tbody=document.getElementById("list");
-
-
-tbody.innerHTML="";
-
-
-let keyword=search.value.toLowerCase();
-
-
-users[currentUser].data.forEach((x,i)=>{
-
-
-if(x.name.toLowerCase().includes(keyword)){
-
-
-tbody.innerHTML+=`
-
-
-<tr>
-
-<td>${x.name}</td>
-
-<td>${x.category}</td>
-
-<td>
-Rp ${x.amount.toLocaleString()}
-</td>
-
-
-<td>
-
-<button class="delete" onclick="hapus(${i})">
-Hapus
-</button>
-
-</td>
-
-
-</tr>
-
-
-`;
-
-
-}
-
-
-});
-
-
-}
-
-
-
-
-function hapus(i){
-
-
-users[currentUser].data.splice(i,1);
-
-
-save();
-
-load();
-
-
-}
-
-
-
-
-function saveTarget(){
-
-
-users[currentUser].target=
-Number(target.value);
-
-
-save();
-
-
-load();
-
-
-}
-
-
-
-
-
-function chart(income,expense){
-
-
-new Chart(document.getElementById("chart"),{
-
-
-type:"doughnut",
-
-
-data:{
-
-
-labels:[
-
-"Pemasukan",
-
-"Pengeluaran"
-
-],
-
-
-datasets:[{
-
-
-data:[income,expense]
-
-
-}]
-
-
-}
-
-
-});
-
-
-}
 </script>
-
-
 </body>
 </html>
