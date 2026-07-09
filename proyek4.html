@@ -3,171 +3,1034 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Kalkulator Modern</title>
-
+<title>Kalkulator Modern 2026</title>
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
+/* ============ VARIABLES & RESET ============ */
+:root {
+    --primary: #6366f1;
+    --secondary: #ec4899;
+    --accent: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+    
+    --bg-light: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 50%, #a8edea 100%);
+    --bg-dark: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+    
+    --glass-light: rgba(255, 255, 255, 0.55);
+    --glass-dark: rgba(15, 23, 42, 0.55);
+    --border-light: rgba(255, 255, 255, 0.6);
+    --border-dark: rgba(255, 255, 255, 0.1);
+    
+    --text-light: #1e293b;
+    --text-dark: #f1f5f9;
+    
+    --btn-light: rgba(255, 255, 255, 0.4);
+    --btn-dark: rgba(255, 255, 255, 0.08);
+    --btn-hover-light: rgba(255, 255, 255, 0.7);
+    --btn-hover-dark: rgba(255, 255, 255, 0.15);
+    
+    --shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+    --radius: 16px;
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-body{
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(135deg,#667eea,#764ba2);
+[data-theme="dark"] {
+    --bg: var(--bg-dark);
+    --glass: var(--glass-dark);
+    --border: var(--border-dark);
+    --text: var(--text-dark);
+    --btn: var(--btn-dark);
+    --btn-hover: var(--btn-hover-dark);
+}
+[data-theme="light"] {
+    --bg: var(--bg-light);
+    --glass: var(--glass-light);
+    --border: var(--border-light);
+    --text: var(--text-light);
+    --btn: var(--btn-light);
+    --btn-hover: var(--btn-hover-light);
 }
 
-.calculator{
-    width:350px;
-    background:#1e1e2f;
-    padding:20px;
-    border-radius:25px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.3);
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transition: var(--transition);
+    overflow-x: hidden;
 }
 
-.display{
-    width:100%;
-    height:80px;
-    background:#111;
-    color:white;
-    border:none;
-    border-radius:15px;
-    text-align:right;
-    padding:20px;
-    font-size:35px;
-    margin-bottom:20px;
-    overflow:hidden;
+/* ============ BACKGROUND ORBS ============ */
+.orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.5;
+    z-index: -1;
+    animation: float 20s infinite ease-in-out;
+}
+.orb1 { width: 300px; height: 300px; background: var(--primary); top: -100px; left: -100px; }
+.orb2 { width: 400px; height: 400px; background: var(--secondary); bottom: -150px; right: -150px; animation-delay: -5s; }
+.orb3 { width: 250px; height: 250px; background: var(--accent); top: 50%; left: 50%; animation-delay: -10s; }
+@keyframes float {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(50px, -50px) scale(1.1); }
+    66% { transform: translate(-30px, 30px) scale(0.9); }
 }
 
-.buttons{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:12px;
+/* ============ MAIN CONTAINER ============ */
+.calculator {
+    width: 100%;
+    max-width: 480px;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 24px;
+    position: relative;
+    animation: slideUp 0.6s ease;
+}
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-button{
-    height:65px;
-    border:none;
-    border-radius:15px;
-    font-size:22px;
-    cursor:pointer;
-    background:#333;
-    color:white;
-    transition:0.2s;
+/* ============ HEADER ============ */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+.header-actions { display: flex; gap: 8px; }
+.icon-btn {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: var(--btn);
+    border: 1px solid var(--border);
+    color: var(--text);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+.icon-btn:hover { background: var(--btn-hover); transform: translateY(-2px); }
+.icon-btn.active { background: var(--primary); color: white; }
+
+/* ============ MODE TOGGLE ============ */
+.mode-toggle {
+    display: flex;
+    background: var(--btn);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 4px;
+    margin-bottom: 16px;
+}
+.mode-btn {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    background: transparent;
+    color: var(--text);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: var(--transition);
+}
+.mode-btn.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
 }
 
-button:hover{
-    transform:scale(1.05);
-    background:#444;
+/* ============ DISPLAY ============ */
+.display {
+    background: var(--btn);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin-bottom: 16px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    text-align: right;
+    position: relative;
+    overflow: hidden;
+}
+.memory-indicator {
+    position: absolute;
+    top: 8px;
+    left: 12px;
+    font-size: 0.7rem;
+    color: var(--primary);
+    font-weight: 700;
+    opacity: 0;
+    transition: var(--transition);
+}
+.memory-indicator.show { opacity: 1; }
+.angle-mode {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    font-size: 0.7rem;
+    color: var(--secondary);
+    font-weight: 700;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 6px;
+    background: var(--btn-hover);
+}
+.expression {
+    font-size: 1rem;
+    opacity: 0.7;
+    min-height: 24px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-height: 60px;
+    overflow-y: auto;
+}
+.result {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-top: 8px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    transition: var(--transition);
+}
+.result.error { color: var(--danger); font-size: 1.5rem; }
+
+/* ============ BUTTONS GRID ============ */
+.buttons {
+    display: grid;
+    gap: 10px;
+}
+.standard-grid {
+    grid-template-columns: repeat(4, 1fr);
+}
+.scientific-grid {
+    grid-template-columns: repeat(5, 1fr);
+}
+.btn {
+    padding: 16px 0;
+    border: 1px solid var(--border);
+    background: var(--btn);
+    color: var(--text);
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 1.05rem;
+    font-weight: 600;
+    transition: var(--transition);
+    backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+}
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 0; height: 0;
+    background: rgba(255,255,255,0.3);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+}
+.btn:active::before { width: 200px; height: 200px; }
+.btn:hover { background: var(--btn-hover); transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+
+.btn.operator { color: var(--primary); font-weight: 700; }
+.btn.equals {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    border: none;
+}
+.btn.equals:hover { box-shadow: 0 4px 16px rgba(99, 102, 241, 0.5); }
+.btn.clear { color: var(--danger); }
+.btn.memory { color: var(--accent); font-size: 0.9rem; }
+.btn.scientific { font-size: 0.85rem; color: var(--secondary); }
+
+/* ============ HISTORY PANEL ============ */
+.history-panel {
+    position: fixed;
+    top: 0; right: -400px;
+    width: 380px;
+    max-width: 90vw;
+    height: 100vh;
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border-left: 1px solid var(--border);
+    padding: 24px;
+    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 100;
+    overflow-y: auto;
+}
+.history-panel.open { right: 0; }
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+.history-item {
+    background: var(--btn);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+.history-item:hover { background: var(--btn-hover); transform: translateX(-4px); }
+.history-expr { font-size: 0.85rem; opacity: 0.7; }
+.history-result { font-size: 1.2rem; font-weight: 700; color: var(--primary); }
+.empty-history { text-align: center; opacity: 0.5; padding: 40px 0; }
+
+/* ============ TOAST ============ */
+.toast-container {
+    position: fixed;
+    bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+.toast {
+    background: var(--glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    padding: 12px 24px;
+    border-radius: 12px;
+    color: var(--text);
+    box-shadow: var(--shadow);
+    animation: toastIn 0.3s ease;
+}
+@keyframes toastIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
-.operator{
-    background:#ff9500;
+/* ============ RESPONSIVE ============ */
+@media (max-width: 480px) {
+    .calculator { padding: 16px; border-radius: 20px; }
+    .btn { padding: 14px 0; font-size: 0.95rem; }
+    .result { font-size: 2rem; }
+    .scientific-grid { grid-template-columns: repeat(5, 1fr); }
+    .btn.scientific { font-size: 0.75rem; padding: 12px 0; }
 }
-
-.operator:hover{
-    background:#ffad33;
-}
-
-.clear{
-    background:#e74c3c;
-}
-
-.equal{
-    background:#2ecc71;
-    grid-column:span 2;
-}
-
-.zero{
-    grid-column:span 2;
-}
-
 </style>
-
 </head>
+<body data-theme="light">
 
-<body>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
 
 <div class="calculator">
+    <!-- Header -->
+    <div class="header">
+        <div class="title">🧮 Kalkulator Pro</div>
+        <div class="header-actions">
+            <button class="icon-btn" id="theme-toggle" title="Ganti Tema">🌓</button>
+            <button class="icon-btn" id="history-toggle" title="Riwayat">🕒</button>
+        </div>
+    </div>
 
-<input type="text" class="display" id="display" disabled>
+    <!-- Mode Toggle -->
+    <div class="mode-toggle">
+        <button class="mode-btn active" data-mode="standard">Standard</button>
+        <button class="mode-btn" data-mode="scientific">Scientific</button>
+    </div>
 
-<div class="buttons">
+    <!-- Display -->
+    <div class="display">
+        <div class="memory-indicator" id="memory-indicator">M</div>
+        <div class="angle-mode" id="angle-mode" title="Klik untuk ganti">DEG</div>
+        <div class="expression" id="expression">0</div>
+        <div class="result" id="result">0</div>
+    </div>
 
-<button class="clear" onclick="clearDisplay()">C</button>
-<button onclick="deleteChar()">⌫</button>
-<button onclick="append('%')">%</button>
-<button class="operator" onclick="append('/')">÷</button>
-
-<button onclick="append('7')">7</button>
-<button onclick="append('8')">8</button>
-<button onclick="append('9')">9</button>
-<button class="operator" onclick="append('*')">×</button>
-
-<button onclick="append('4')">4</button>
-<button onclick="append('5')">5</button>
-<button onclick="append('6')">6</button>
-<button class="operator" onclick="append('-')">−</button>
-
-<button onclick="append('1')">1</button>
-<button onclick="append('2')">2</button>
-<button onclick="append('3')">3</button>
-<button class="operator" onclick="append('+')">+</button>
-
-<button class="zero" onclick="append('0')">0</button>
-<button onclick="append('.')">.</button>
-
-<button class="equal" onclick="calculate()">=</button>
-
+    <!-- Buttons -->
+    <div class="buttons standard-grid" id="buttons-container">
+        <!-- Buttons akan di-generate oleh JS -->
+    </div>
 </div>
 
+<!-- History Panel -->
+<div class="history-panel" id="history-panel">
+    <div class="history-header">
+        <h3>📜 Riwayat</h3>
+        <button class="icon-btn" id="clear-history" title="Hapus Semua">🗑️</button>
+    </div>
+    <div id="history-list"></div>
 </div>
 
+<div class="toast-container" id="toast-container"></div>
 
 <script>
+/* ============ KALKULATOR MODERN 2026 ============ */
+const Calc = {
+    state: {
+        expression: '',
+        result: '0',
+        memory: 0,
+        hasMemory: false,
+        history: [],
+        mode: 'standard',
+        angleMode: 'DEG', // DEG atau RAD
+        lastResult: null,
+        justCalculated: false
+    },
 
-let display = document.getElementById("display");
+    // Konfigurasi tombol
+    buttons: {
+        standard: [
+            { label: 'C', type: 'clear', action: 'clear' },
+            { label: '⌫', type: 'clear', action: 'backspace' },
+            { label: '%', type: 'operator', action: 'input', value: '%' },
+            { label: '÷', type: 'operator', action: 'input', value: '/' },
+            
+            { label: '7', action: 'input', value: '7' },
+            { label: '8', action: 'input', value: '8' },
+            { label: '9', action: 'input', value: '9' },
+            { label: '×', type: 'operator', action: 'input', value: '*' },
+            
+            { label: '4', action: 'input', value: '4' },
+            { label: '5', action: 'input', value: '5' },
+            { label: '6', action: 'input', value: '6' },
+            { label: '−', type: 'operator', action: 'input', value: '-' },
+            
+            { label: '1', action: 'input', value: '1' },
+            { label: '2', action: 'input', value: '2' },
+            { label: '3', action: 'input', value: '3' },
+            { label: '+', type: 'operator', action: 'input', value: '+' },
+            
+            { label: '±', action: 'negate' },
+            { label: '0', action: 'input', value: '0' },
+            { label: '.', action: 'input', value: '.' },
+            { label: '=', type: 'equals', action: 'calculate' }
+        ],
+        scientific: [
+            // Baris 1: Memory & Mode
+            { label: 'MC', type: 'memory', action: 'memory', value: 'MC' },
+            { label: 'MR', type: 'memory', action: 'memory', value: 'MR' },
+            { label: 'M+', type: 'memory', action: 'memory', value: 'M+' },
+            { label: 'M-', type: 'memory', action: 'memory', value: 'M-' },
+            { label: 'MS', type: 'memory', action: 'memory', value: 'MS' },
+            
+            // Baris 2: Scientific functions
+            { label: 'sin', type: 'scientific', action: 'func', value: 'sin' },
+            { label: 'cos', type: 'scientific', action: 'func', value: 'cos' },
+            { label: 'tan', type: 'scientific', action: 'func', value: 'tan' },
+            { label: 'π', type: 'scientific', action: 'input', value: 'π' },
+            { label: 'e', type: 'scientific', action: 'input', value: 'e' },
+            
+            // Baris 3
+            { label: 'sin⁻¹', type: 'scientific', action: 'func', value: 'asin' },
+            { label: 'cos⁻¹', type: 'scientific', action: 'func', value: 'acos' },
+            { label: 'tan⁻¹', type: 'scientific', action: 'func', value: 'atan' },
+            { label: 'log', type: 'scientific', action: 'func', value: 'log' },
+            { label: 'ln', type: 'scientific', action: 'func', value: 'ln' },
+            
+            // Baris 4
+            { label: 'x²', type: 'scientific', action: 'postfix', value: '²' },
+            { label: 'x³', type: 'scientific', action: 'postfix', value: '³' },
+            { label: 'xʸ', type: 'scientific', action: 'input', value: '^' },
+            { label: '√', type: 'scientific', action: 'func', value: '√' },
+            { label: '∛', type: 'scientific', action: 'func', value: '∛' },
+            
+            // Baris 5
+            { label: '(', type: 'scientific', action: 'input', value: '(' },
+            { label: ')', type: 'scientific', action: 'input', value: ')' },
+            { label: 'n!', type: 'scientific', action: 'postfix', value: '!' },
+            { label: '1/x', type: 'scientific', action: 'func', value: '1/' },
+            { label: '|x|', type: 'scientific', action: 'func', value: 'abs' },
+            
+            // Baris 6: Standard (sama seperti sebelumnya)
+            { label: 'C', type: 'clear', action: 'clear' },
+            { label: '⌫', type: 'clear', action: 'backspace' },
+            { label: '%', type: 'operator', action: 'input', value: '%' },
+            { label: '÷', type: 'operator', action: 'input', value: '/' },
+            { label: 'eˣ', type: 'scientific', action: 'func', value: 'exp' },
+            
+            { label: '7', action: 'input', value: '7' },
+            { label: '8', action: 'input', value: '8' },
+            { label: '9', action: 'input', value: '9' },
+            { label: '×', type: 'operator', action: 'input', value: '*' },
+            { label: '10ˣ', type: 'scientific', action: 'func', value: '10^' },
+            
+            { label: '4', action: 'input', value: '4' },
+            { label: '5', action: 'input', value: '5' },
+            { label: '6', action: 'input', value: '6' },
+            { label: '−', type: 'operator', action: 'input', value: '-' },
+            { label: '±', action: 'negate' },
+            
+            { label: '1', action: 'input', value: '1' },
+            { label: '2', action: 'input', value: '2' },
+            { label: '3', action: 'input', value: '3' },
+            { label: '+', type: 'operator', action: 'input', value: '+' },
+            { label: 'Rand', type: 'scientific', action: 'random' },
+            
+            { label: '0', action: 'input', value: '0', span: 2 },
+            { label: '.', action: 'input', value: '.' },
+            { label: '=', type: 'equals', action: 'calculate', span: 2 }
+        ]
+    },
 
+    init() {
+        this.loadState();
+        this.renderButtons();
+        this.bindEvents();
+        this.updateDisplay();
+        this.renderHistory();
+        this.updateMemoryIndicator();
+    },
 
-function append(value){
-    display.value += value;
-}
+    loadState() {
+        try {
+            const saved = localStorage.getItem('calc_state');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                Object.assign(this.state, parsed);
+            }
+            const theme = localStorage.getItem('calc_theme') || 'light';
+            document.body.setAttribute('data-theme', theme);
+        } catch(e) { console.error(e); }
+    },
 
+    saveState() {
+        try {
+            localStorage.setItem('calc_state', JSON.stringify({
+                history: this.state.history,
+                memory: this.state.memory,
+                hasMemory: this.state.hasMemory,
+                mode: this.state.mode,
+                angleMode: this.state.angleMode
+            }));
+        } catch(e) { console.error(e); }
+    },
 
-function clearDisplay(){
-    display.value="";
-}
+    renderButtons() {
+        const container = document.getElementById('buttons-container');
+        const buttons = this.buttons[this.state.mode];
+        
+        container.className = `buttons ${this.state.mode}-grid`;
+        container.innerHTML = '';
+        
+        buttons.forEach(btn => {
+            const el = document.createElement('button');
+            el.className = 'btn';
+            if (btn.type) el.classList.add(btn.type);
+            if (btn.span) el.style.gridColumn = `span ${btn.span}`;
+            el.textContent = btn.label;
+            el.dataset.action = btn.action;
+            if (btn.value !== undefined) el.dataset.value = btn.value;
+            container.appendChild(el);
+        });
+    },
 
+    bindEvents() {
+        // Tombol kalkulator
+        document.getElementById('buttons-container').addEventListener('click', (e) => {
+            const btn = e.target.closest('.btn');
+            if (!btn) return;
+            this.handleButton(btn.dataset.action, btn.dataset.value);
+        });
 
-function deleteChar(){
-    display.value = display.value.slice(0,-1);
-}
+        // Mode toggle
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                this.state.mode = btn.dataset.mode;
+                this.renderButtons();
+                this.saveState();
+            });
+        });
 
+        // Theme toggle
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const current = document.body.getAttribute('data-theme');
+            const next = current === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', next);
+            localStorage.setItem('calc_theme', next);
+        });
 
-function calculate(){
+        // History toggle
+        document.getElementById('history-toggle').addEventListener('click', () => {
+            document.getElementById('history-panel').classList.toggle('open');
+        });
 
-    try{
+        // Clear history
+        document.getElementById('clear-history').addEventListener('click', () => {
+            if (confirm('Hapus semua riwayat?')) {
+                this.state.history = [];
+                this.renderHistory();
+                this.saveState();
+                this.toast('Riwayat dihapus');
+            }
+        });
 
-        if(display.value===""){
-            return;
+        // Angle mode toggle
+        document.getElementById('angle-mode').addEventListener('click', () => {
+            this.state.angleMode = this.state.angleMode === 'DEG' ? 'RAD' : 'DEG';
+            document.getElementById('angle-mode').textContent = this.state.angleMode;
+            this.saveState();
+            this.toast(`Mode sudut: ${this.state.angleMode}`);
+        });
+
+        // Keyboard support
+        document.addEventListener('keydown', (e) => this.handleKeyboard(e));
+
+        // Close history on outside click
+        document.addEventListener('click', (e) => {
+            const panel = document.getElementById('history-panel');
+            const toggle = document.getElementById('history-toggle');
+            if (panel.classList.contains('open') && 
+                !panel.contains(e.target) && 
+                !toggle.contains(e.target)) {
+                panel.classList.remove('open');
+            }
+        });
+    },
+
+    handleKeyboard(e) {
+        const key = e.key;
+        if (/[0-9]/.test(key)) { this.input(key); return; }
+        
+        const keyMap = {
+            '+': '+', '-': '-', '*': '*', '/': '/',
+            '.': '.', '%': '%', '^': '^',
+            '(': '(', ')': ')',
+            'Enter': 'calculate', '=': 'calculate',
+            'Backspace': 'backspace',
+            'Escape': 'clear',
+            'Delete': 'clear'
+        };
+        
+        if (keyMap[key]) {
+            e.preventDefault();
+            if (keyMap[key] === 'calculate') this.calculate();
+            else if (keyMap[key] === 'backspace') this.backspace();
+            else if (keyMap[key] === 'clear') this.clear();
+            else this.input(keyMap[key]);
+        }
+    },
+
+    handleButton(action, value) {
+        switch(action) {
+            case 'input': this.input(value); break;
+            case 'clear': this.clear(); break;
+            case 'backspace': this.backspace(); break;
+            case 'calculate': this.calculate(); break;
+            case 'negate': this.negate(); break;
+            case 'func': this.applyFunction(value); break;
+            case 'postfix': this.applyPostfix(value); break;
+            case 'memory': this.handleMemory(value); break;
+            case 'random': this.input(Math.random().toFixed(4)); break;
+        }
+    },
+
+    input(value) {
+        // Jika baru saja menghitung dan input angka baru, mulai ekspresi baru
+        if (this.state.justCalculated && /[0-9.πe]/.test(value)) {
+            this.state.expression = '';
+            this.state.justCalculated = false;
+        } else {
+            this.state.justCalculated = false;
         }
 
-        display.value = eval(display.value);
+        // Cegah double operator
+        const lastChar = this.state.expression.slice(-1);
+        const operators = ['+', '-', '*', '/', '^'];
+        if (operators.includes(value) && operators.includes(lastChar)) {
+            this.state.expression = this.state.expression.slice(0, -1) + value;
+        } 
+        // Cegah double dot dalam satu angka
+        else if (value === '.') {
+            const parts = this.state.expression.split(/[\+\-\*\/\^\(]/);
+            const lastPart = parts[parts.length - 1];
+            if (lastPart.includes('.')) return;
+            if (lastPart === '') this.state.expression += '0';
+            this.state.expression += value;
+        }
+        // Awal ekspresi dengan operator (kecuali minus untuk negatif)
+        else if (operators.includes(value) && this.state.expression === '' && value !== '-') {
+            return;
+        }
+        // Double minus
+        else if (value === '-' && (lastChar === '-' || lastChar === '')) {
+            this.state.expression += value;
+        }
+        else {
+            this.state.expression += value;
+        }
 
-    }catch{
+        this.updateDisplay();
+        this.livePreview();
+    },
 
-        display.value="Error";
+    clear() {
+        this.state.expression = '';
+        this.state.result = '0';
+        this.state.justCalculated = false;
+        this.updateDisplay();
+    },
 
+    backspace() {
+        if (this.state.justCalculated) {
+            this.clear();
+            return;
+        }
+        // Hapus fungsi multi-char seperti sin(, log(, √(
+        const funcPatterns = ['sin(', 'cos(', 'tan(', 'asin(', 'acos(', 'atan(', 
+                              'log(', 'ln(', '√(', '∛(', 'abs(', '1/(', 'exp(', '10^('];
+        for (const pat of funcPatterns) {
+            if (this.state.expression.endsWith(pat)) {
+                this.state.expression = this.state.expression.slice(0, -pat.length);
+                this.updateDisplay();
+                this.livePreview();
+                return;
+            }
+        }
+        this.state.expression = this.state.expression.slice(0, -1);
+        this.updateDisplay();
+        this.livePreview();
+    },
+
+    negate() {
+        if (this.state.expression === '' || this.state.expression === '0') {
+            this.state.expression = '-';
+        } else {
+            // Bungkus dengan -1 * atau toggle tanda
+            const lastNum = this.getLastNumber();
+            if (lastNum) {
+                const expr = this.state.expression;
+                const idx = expr.lastIndexOf(lastNum);
+                if (idx > 0 && expr[idx-1] === '-') {
+                    this.state.expression = expr.slice(0, idx-1) + expr.slice(idx);
+                } else {
+                    this.state.expression = expr.slice(0, idx) + '-' + expr.slice(idx);
+                }
+            } else {
+                this.state.expression = '-(' + this.state.expression + ')';
+            }
+        }
+        this.updateDisplay();
+        this.livePreview();
+    },
+
+    getLastNumber() {
+        const match = this.state.expression.match(/(\d+\.?\d*|π|e)$/);
+        return match ? match[1] : null;
+    },
+
+    applyFunction(func) {
+        const wrap = (inner) => `${func}(${inner})`;
+        
+        if (this.state.expression === '' || this.state.justCalculated) {
+            this.state.expression = wrap(this.state.result !== '0' ? this.state.result : '');
+        } else {
+            this.state.expression = wrap(this.state.expression);
+        }
+        this.state.justCalculated = false;
+        this.updateDisplay();
+        this.livePreview();
+    },
+
+    applyPostfix(op) {
+        if (this.state.expression === '') return;
+        this.state.expression += op;
+        this.updateDisplay();
+        this.livePreview();
+    },
+
+    handleMemory(action) {
+        const current = parseFloat(this.state.result) || 0;
+        switch(action) {
+            case 'MC':
+                this.state.memory = 0;
+                this.state.hasMemory = false;
+                this.toast('Memory dibersihkan');
+                break;
+            case 'MR':
+                if (this.state.hasMemory) {
+                    this.state.expression += this.state.memory.toString();
+                    this.updateDisplay();
+                    this.livePreview();
+                }
+                break;
+            case 'M+':
+                this.state.memory += current;
+                this.state.hasMemory = true;
+                this.toast(`M+ : ${this.state.memory}`);
+                break;
+            case 'M-':
+                this.state.memory -= current;
+                this.state.hasMemory = true;
+                this.toast(`M- : ${this.state.memory}`);
+                break;
+            case 'MS':
+                this.state.memory = current;
+                this.state.hasMemory = true;
+                this.toast(`MS : ${this.state.memory}`);
+                break;
+        }
+        this.updateMemoryIndicator();
+        this.saveState();
+    },
+
+    updateMemoryIndicator() {
+        const ind = document.getElementById('memory-indicator');
+        if (this.state.hasMemory) ind.classList.add('show');
+        else ind.classList.remove('show');
+    },
+
+    // ============ EVALUASI EKSPRESI ============
+    livePreview() {
+        if (this.state.expression === '') {
+            this.state.result = '0';
+            this.updateDisplay();
+            return;
+        }
+        try {
+            const result = this.evaluate(this.state.expression);
+            if (result !== null && !isNaN(result) && isFinite(result)) {
+                this.state.result = this.formatNumber(result);
+                this.updateDisplay();
+            }
+        } catch(e) {
+            // Biarkan result tetap, jangan tampilkan error saat mengetik
+        }
+    },
+
+    calculate() {
+        if (this.state.expression === '') return;
+        try {
+            const result = this.evaluate(this.state.expression);
+            if (result === null || isNaN(result)) {
+                throw new Error('Ekspresi tidak valid');
+            }
+            if (!isFinite(result)) {
+                throw new Error('Tidak dapat membagi dengan nol');
+            }
+            
+            const formatted = this.formatNumber(result);
+            
+            // Simpan ke history
+            this.state.history.unshift({
+                expr: this.formatDisplay(this.state.expression),
+                result: formatted,
+                timestamp: Date.now()
+            });
+            if (this.state.history.length > 50) this.state.history.pop();
+            
+            this.state.lastResult = result;
+            this.state.result = formatted;
+            this.state.expression = formatted;
+            this.state.justCalculated = true;
+            
+            this.updateDisplay();
+            this.renderHistory();
+            this.saveState();
+        } catch(e) {
+            this.state.result = 'Error';
+            document.getElementById('result').classList.add('error');
+            setTimeout(() => document.getElementById('result').classList.remove('error'), 1500);
+            this.toast(e.message || 'Perhitungan error');
+        }
+    },
+
+    evaluate(expr) {
+        // Ganti konstanta
+        let e = expr.replace(/π/g, `(${Math.PI})`).replace(/e(?!xp)/g, `(${Math.E})`);
+        
+        // Ganti simbol
+        e = e.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+        
+        // Handle postfix
+        e = this.handlePostfix(e);
+        
+        // Handle fungsi
+        e = this.handleFunctions(e);
+        
+        // Handle persentase: a%b = a*b/100, a% = a/100
+        e = e.replace(/(\d+\.?\d*)%/g, '($1/100)');
+        
+        // Handle pangkat
+        e = e.replace(/\^/g, '**');
+        
+        // Validasi karakter
+        if (!/^[\d\s\+\-\*\/\.\(\)\,a-z]+$/i.test(e)) {
+            throw new Error('Karakter tidak valid');
+        }
+        
+        // Auto-close parentheses
+        const open = (e.match(/\(/g) || []).length;
+        const close = (e.match(/\)/g) || []).length;
+        if (open > close) e += ')'.repeat(open - close);
+        
+        // Evaluasi dengan Function constructor (lebih aman dari eval)
+        try {
+            const fn = new Function(`"use strict"; return (${e});`);
+            return fn();
+        } catch(err) {
+            throw new Error('Sintaks salah');
+        }
+    },
+
+    handlePostfix(expr) {
+        // Handle factorial: n!
+        let result = expr;
+        result = result.replace(/(\d+\.?\d*)!/g, (_, n) => `(${this.factorial(parseFloat(n))})`);
+        
+        // Handle kuadrat: x²
+        result = result.replace(/(\d+\.?\d*|\([^()]+\))²/g, '($1)**2');
+        
+        // Handle kubik: x³
+        result = result.replace(/(\d+\.?\d*|\([^()]+\))³/g, '($1)**3');
+        
+        return result;
+    },
+
+    handleFunctions(expr) {
+        const toRad = this.state.angleMode === 'DEG' ? `*(${Math.PI}/180)` : '';
+        const fromRad = this.state.angleMode === 'DEG' ? `*(180/${Math.PI})` : '';
+        
+        let e = expr;
+        
+        // Fungsi trigonometri
+        e = e.replace(/sin\(([^()]+)\)/g, `Math.sin(($1)${toRad})`);
+        e = e.replace(/cos\(([^()]+)\)/g, `Math.cos(($1)${toRad})`);
+        e = e.replace(/tan\(([^()]+)\)/g, `Math.tan(($1)${toRad})`);
+        
+        // Invers trigonometri
+        e = e.replace(/asin\(([^()]+)\)/g, `(Math.asin($1)${fromRad})`);
+        e = e.replace(/acos\(([^()]+)\)/g, `(Math.acos($1)${fromRad})`);
+        e = e.replace(/atan\(([^()]+)\)/g, `(Math.atan($1)${fromRad})`);
+        
+        // Logaritma
+        e = e.replace(/log\(([^()]+)\)/g, 'Math.log10($1)');
+        e = e.replace(/ln\(([^()]+)\)/g, 'Math.log($1)');
+        
+        // Akar
+        e = e.replace(/√\(([^()]+)\)/g, 'Math.sqrt($1)');
+        e = e.replace(/∛\(([^()]+)\)/g, 'Math.cbrt($1)');
+        
+        // Lainnya
+        e = e.replace(/abs\(([^()]+)\)/g, 'Math.abs($1)');
+        e = e.replace(/1\/\(([^()]+)\)/g, '(1/($1))');
+        e = e.replace(/exp\(([^()]+)\)/g, 'Math.exp($1)');
+        e = e.replace(/10\^\(([^()]+)\)/g, 'Math.pow(10,$1)');
+        
+        return e;
+    },
+
+    factorial(n) {
+        if (n < 0 || !Number.isInteger(n)) return NaN;
+        if (n > 170) return Infinity;
+        if (n <= 1) return 1;
+        let result = 1;
+        for (let i = 2; i <= n; i++) result *= i;
+        return result;
+    },
+
+    formatNumber(num) {
+        if (Number.isInteger(num) && Math.abs(num) < 1e15) {
+            return num.toString();
+        }
+        // Format dengan presisi yang wajar
+        const str = num.toPrecision(12);
+        // Hapus trailing zeros
+        return parseFloat(str).toString();
+    },
+
+    formatDisplay(expr) {
+        return expr
+            .replace(/\*/g, '×')
+            .replace(/\//g, '÷')
+            .replace(/-/g, '−');
+    },
+
+    updateDisplay() {
+        const exprEl = document.getElementById('expression');
+        const resEl = document.getElementById('result');
+        
+        exprEl.textContent = this.state.expression === '' ? '0' : this.formatDisplay(this.state.expression);
+        resEl.textContent = this.state.result;
+        
+        // Auto-resize font jika terlalu panjang
+        if (this.state.result.length > 12) {
+            resEl.style.fontSize = '1.8rem';
+        } else if (this.state.result.length > 8) {
+            resEl.style.fontSize = '2.2rem';
+        } else {
+            resEl.style.fontSize = '2.5rem';
+        }
+    },
+
+    renderHistory() {
+        const list = document.getElementById('history-list');
+        if (this.state.history.length === 0) {
+            list.innerHTML = '<div class="empty-history">Belum ada riwayat</div>';
+            return;
+        }
+        list.innerHTML = this.state.history.map((item, idx) => `
+            <div class="history-item" data-idx="${idx}">
+                <div class="history-expr">${item.expr} =</div>
+                <div class="history-result">${item.result}</div>
+            </div>
+        `).join('');
+        
+        // Klik untuk pakai hasil
+        list.querySelectorAll('.history-item').forEach(el => {
+            el.addEventListener('click', () => {
+                const idx = parseInt(el.dataset.idx);
+                const item = this.state.history[idx];
+                this.state.expression = item.result;
+                this.state.result = item.result;
+                this.state.justCalculated = true;
+                this.updateDisplay();
+                document.getElementById('history-panel').classList.remove('open');
+                this.toast('Hasil digunakan');
+            });
+        });
+    },
+
+    toast(msg) {
+        const container = document.getElementById('toast-container');
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = msg;
+        container.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(20px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 2000);
     }
+};
 
-}
-
+// Start
+document.addEventListener('DOMContentLoaded', () => Calc.init());
 </script>
-
 </body>
 </html>
