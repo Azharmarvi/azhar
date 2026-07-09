@@ -1,1617 +1,910 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Digital Library</title>
-
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:"Segoe UI",sans-serif;
-}
-
-body{
-
-    background:
-    linear-gradient(
-        135deg,
-        #020617,
-        #0f172a,
-        #1d4ed8
-    );
-
-    color:white;
-    min-height:100vh;
-
-}
-
-
-/* NAVBAR */
-
-.navbar{
-
-    position:fixed;
-    top:0;
-    width:100%;
-
-    padding:18px 8%;
-
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-
-    background:
-    rgba(255,255,255,.08);
-
-    backdrop-filter:blur(15px);
-
-    z-index:1000;
-
-}
-
-
-.logo{
-
-    font-size:25px;
-    font-weight:bold;
-
-    color:#38bdf8;
-
-}
-
-
-
-.menu{
-
-    display:flex;
-    gap:25px;
-    list-style:none;
-
-}
-
-
-.menu a{
-
-    color:white;
-    text-decoration:none;
-
-}
-
-
-
-.menu a:hover{
-
-    color:#38bdf8;
-
-}
-
-
-
-/* HERO */
-
-
-.hero{
-
-    min-height:100vh;
-
-    padding:120px 8% 50px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-}
-
-
-
-.hero h1{
-
-    font-size:55px;
-
-}
-
-
-
-.hero span{
-
-    color:#38bdf8;
-
-}
-
-
-
-.hero p{
-
-    margin-top:20px;
-
-    max-width:550px;
-
-    color:#dbeafe;
-
-    font-size:18px;
-
-}
-
-
-
-.btn{
-
-    display:inline-block;
-
-    margin-top:30px;
-
-    padding:15px 35px;
-
-    border-radius:30px;
-
-    background:
-
-    linear-gradient(
-    45deg,
-    #2563eb,
-    #38bdf8
-    );
-
-    color:white;
-
-    text-decoration:none;
-
-    box-shadow:
-    0 0 25px #38bdf8;
-
-}
-
-
-
-.book-animation{
-
-    width:280px;
-    height:280px;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-}
-
-
-
-.floating-book{
-
-    width:150px;
-
-    height:200px;
-
-    border-radius:10px;
-
-    background:
-
-    linear-gradient(
-    135deg,
-    #f59e0b,
-    #78350f
-    );
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    font-size:60px;
-
-    animation:
-
-    naik 3s infinite;
-
-}
-
-
-
-@keyframes naik{
-
-    50%{
-
-        transform:
-        translateY(-20px)
-        rotate    (10deg);
-
-    }
-
-}
-
-
-
-/* SECTION */
-
-section{
-
-    padding:80px 8%;
-
-}
-
-
-.title{
-
-    text-align:center;
-
-    font-size:35px;
-
-    margin-bottom:40px;
-
-}
-
-
-
-/* SEARCH */
-
-.search-area{
-
-    display:flex;
-
-    justify-content:center;
-
-    margin-bottom:40px;
-
-}
-
-
-.search-area input{
-
-    width:60%;
-
-    padding:15px 25px;
-
-    border-radius:30px;
-
-    border:none;
-
-    outline:none;
-
-    font-size:16px;
-
-}
-
-
-
-/* KATEGORI */
-
-
-.category-container{
-
-    display:grid;
-
-    grid-template-columns:
-    repeat(auto-fit,minmax(180px,1fr));
-
-    gap:20px;
-
-}
-
-
-
-.category{
-
-    padding:25px;
-
-    text-align:center;
-
-    border-radius:20px;
-
-
-    background:
-
-    rgba(255,255,255,.12);
-
-
-    backdrop-filter:blur(15px);
-
-
-    border:
-
-    1px solid rgba(255,255,255,.2);
-
-
-    transition:.3s;
-
-}
-
-
-
-.category:hover{
-
-    transform:translateY(-10px);
-
-
-    box-shadow:
-
-    0 0 25px #38bdf8;
-
-}
-
-
-
-/* BOOK CARD */
-
-
-.book-container{
-
-
-    display:grid;
-
-
-    grid-template-columns:
-
-    repeat(auto-fit,minmax(220px,1fr));
-
-
-    gap:25px;
-
-
-}
-
-
-
-.book-card{
-
-
-    background:
-
-    rgba(255,255,255,.1);
-
-
-    border-radius:20px;
-
-
-    padding:20px;
-
-
-    backdrop-filter:blur(15px);
-
-
-    border:
-
-    1px solid rgba(255,255,255,.2);
-
-
-    transition:.3s;
-
-
-}
-
-
-
-.book-card:hover{
-
-
-    transform:translateY(-10px);
-
-
-    box-shadow:
-
-    0 0 30px rgba(56,189,248,.7);
-
-
-}
-
-
-
-.cover{
-
-
-    height:180px;
-
-
-    border-radius:15px;
-
-
-    display:flex;
-
-
-    justify-content:center;
-
-
-    align-items:center;
-
-
-    font-size:60px;
-
-
-    background:
-
-    linear-gradient(
-
-    135deg,
-
-    #2563eb,
-
-    #38bdf8
-
-    );
-
-
-}
-
-
-
-.book-card h3{
-
-
-    margin-top:15px;
-
-
-}
-
-
-
-.book-card p{
-
-
-    color:#cbd5e1;
-
-
-    margin-top:8px;
-
-
-}
-
-
-
-.read-btn{
-
-
-    margin-top:15px;
-
-
-    padding:10px 25px;
-
-
-    border:none;
-
-
-    border-radius:20px;
-
-
-    cursor:pointer;
-
-
-    background:#38bdf8;
-
-
-    font-weight:bold;
-
-
-}
-
-
-
-/* FOOTER */
-
-
-footer{
-
-
-    padding:30px;
-
-
-    text-align:center;
-
-
-    background:
-
-    rgba(0,0,0,.3);
-
-
-}
-
-
-
-
-/* RESPONSIVE */
-
-
-@media(max-width:800px){
-
-
-.hero{
-
-    flex-direction:column;
-
-    text-align:center;
-
-}
-
-
-.hero h1{
-
-    font-size:38px;
-
-}
-
-
-
-.menu{
-
-    display:none;
-
-}
-
-
-.search-area input{
-
-    width:90%;
-
-}
-
-
-
-}
-#reader{
-
-display:none;
-
-position:fixed;
-
-top:0;
-
-left:0;
-
-width:100%;
-
-height:100%;
-
-background:rgba(0,0,0,.75);
-
-z-index:2000;
-
-}
-
-
-
-.reader-content{
-
-position:absolute;
-
-top:50%;
-
-left:50%;
-
-transform:translate(-50%,-50%);
-
-
-width:80%;
-
-max-width:700px;
-
-
-background:
-
-linear-gradient(
-
-135deg,
-
-#0f172a,
-
-#1e40af
-
-);
-
-
-padding:35px;
-
-border-radius:25px;
-
-
-box-shadow:
-
-0 0 40px #38bdf8;
-
-
-}
-
-
-
-.reader-content h2{
-
-font-size:30px;
-
-margin-bottom:20px;
-
-}
-
-
-
-.reader-content p{
-
-line-height:1.8;
-
-color:#dbeafe;
-
-}
-
-
-
-.reader-content button{
-
-margin-top:25px;
-
-margin-right:10px;
-
-padding:12px 20px;
-
-border:none;
-
-border-radius:20px;
-
-cursor:pointer;
-
-}
-button:hover,
-.btn:hover{
-
-transform:scale(1.05);
-
-transition:.3s;
-
-}
-</style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduLib - Perpustakaan Digital Edukasi 2026</title>
+    <style>
+        /* --- CSS VARIABLES & RESET --- */
+        :root {
+            --primary: #4f46e5;
+            --secondary: #ec4899;
+            --bg-gradient-light: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%);
+            --bg-gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            --glass-bg-light: rgba(255, 255, 255, 0.65);
+            --glass-bg-dark: rgba(15, 23, 42, 0.65);
+            --glass-border-light: rgba(255, 255, 255, 0.5);
+            --glass-border-dark: rgba(255, 255, 255, 0.1);
+            --text-light: #1e293b;
+            --text-dark: #f1f5f9;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg-current: var(--bg-gradient-dark);
+            --glass-current: var(--glass-bg-dark);
+            --border-current: var(--glass-border-dark);
+            --text-current: var(--text-dark);
+        }
+
+        [data-theme="light"] {
+            --bg-current: var(--bg-gradient-light);
+            --glass-current: var(--glass-bg-light);
+            --border-current: var(--glass-border-light);
+            --text-current: var(--text-light);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background: var(--bg-current);
+            color: var(--text-current);
+            min-height: 100vh;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* --- UTILITIES --- */
+        .glass {
+            background: var(--glass-current);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-current);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            background: var(--primary);
+            color: white;
+        }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4); }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .btn-danger { background: #ef4444; }
+        
+        .hidden { display: none !important; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+        /* --- LOADING ANIMATION --- */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-current); z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .spinner {
+            width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.3);
+            border-radius: 50%; border-top-color: var(--primary);
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- TOAST NOTIFICATION --- */
+        #toast-container {
+            position: fixed; bottom: 20px; right: 20px; z-index: 1000;
+            display: flex; flex-direction: column; gap: 10px;
+        }
+        .toast {
+            padding: 12px 24px; border-radius: 8px; color: white;
+            animation: slideIn 0.3s ease forwards;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .toast.success { background: #10b981; }
+        .toast.error { background: #ef4444; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* --- AUTH SCREENS --- */
+        .auth-wrapper {
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 20px;
+        }
+        .auth-card {
+            width: 100%; max-width: 400px; padding: 40px;
+            text-align: center;
+        }
+        .auth-card h2 { margin-bottom: 20px; color: var(--primary); }
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; margin-bottom: 5px; font-size: 0.9rem; }
+        .form-group input {
+            width: 100%; padding: 10px; border-radius: 8px;
+            border: 1px solid var(--border-current); background: rgba(255,255,255,0.1);
+            color: var(--text-current); outline: none;
+        }
+
+        /* --- DASHBOARD LAYOUT --- */
+        .dashboard-layout { display: flex; min-height: 100vh; }
+        
+        /* Sidebar */
+        .sidebar {
+            width: 250px; padding: 20px; display: flex; flex-direction: column;
+            border-right: 1px solid var(--border-current);
+            position: fixed; height: 100%; overflow-y: auto; z-index: 100;
+            transition: var(--transition);
+        }
+        .logo { font-size: 1.5rem; font-weight: bold; margin-bottom: 30px; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .nav-item {
+            padding: 12px; margin-bottom: 5px; border-radius: 8px;
+            cursor: pointer; transition: var(--transition); display: flex; align-items: center; gap: 10px;
+        }
+        .nav-item:hover, .nav-item.active { background: rgba(79, 70, 229, 0.2); color: var(--primary); }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1; margin-left: 250px; padding: 20px;
+            transition: var(--transition);
+        }
+
+        /* Header */
+        .header {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-bottom: 30px; flex-wrap: wrap; gap: 15px;
+        }
+        .search-bar {
+            display: flex; gap: 10px; flex: 1; max-width: 500px;
+        }
+        .search-bar input {
+            flex: 1; padding: 10px 15px; border-radius: 8px;
+            border: 1px solid var(--border-current); background: rgba(255,255,255,0.1);
+            color: var(--text-current);
+        }
+
+        /* Category Filter */
+        .categories {
+            display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px; margin-bottom: 20px;
+        }
+        .cat-pill {
+            padding: 6px 16px; border-radius: 20px; font-size: 0.85rem;
+            cursor: pointer; white-space: nowrap; border: 1px solid var(--border-current);
+            transition: var(--transition);
+        }
+        .cat-pill.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* Book Grid */
+        .book-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .book-card {
+            padding: 20px; display: flex; flex-direction: column;
+            transition: var(--transition); position: relative;
+        }
+        .book-card:hover { transform: translateY(-5px); }
+        .book-cover {
+            height: 150px; background: linear-gradient(45deg, var(--primary), var(--secondary));
+            border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: bold; font-size: 1.2rem; text-align: center; padding: 10px;
+        }
+        .book-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; }
+        .book-meta { font-size: 0.85rem; opacity: 0.8; margin-bottom: 15px; }
+        .book-actions { display: flex; justify-content: space-between; margin-top: auto; }
+
+        /* Book Detail View */
+        .detail-view { padding: 20px; animation: fadeIn 0.5s; }
+        .detail-header { margin-bottom: 30px; border-bottom: 1px solid var(--border-current); padding-bottom: 20px; }
+        .detail-section { margin-bottom: 25px; }
+        .detail-section h3 { color: var(--primary); margin-bottom: 10px; border-left: 4px solid var(--secondary); padding-left: 10px; }
+        .timeline-item { margin-bottom: 10px; padding-left: 20px; border-left: 2px solid var(--border-current); position: relative; }
+        .timeline-item::before {
+            content: ''; position: absolute; left: -6px; top: 5px; width: 10px; height: 10px;
+            background: var(--secondary); border-radius: 50%;
+        }
+        
+        /* Quiz Section */
+        .quiz-container { margin-top: 30px; padding: 20px; background: rgba(0,0,0,0.05); border-radius: var(--radius); }
+        .quiz-option {
+            display: block; width: 100%; padding: 10px; margin: 5px 0;
+            text-align: left; background: rgba(255,255,255,0.1); border: 1px solid var(--border-current);
+            border-radius: 8px; cursor: pointer;
+        }
+        .quiz-option:hover { background: rgba(79, 70, 229, 0.1); }
+        .quiz-option.correct { background: #10b981; color: white; }
+        .quiz-option.wrong { background: #ef4444; color: white; }
+
+        /* Admin Panel */
+        .admin-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .admin-table th, .admin-table td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border-current); }
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center;
+            z-index: 2000; backdrop-filter: blur(5px);
+        }
+        .modal-content { width: 90%; max-width: 600px; padding: 30px; max-height: 90vh; overflow-y: auto; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); width: 250px; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .menu-toggle { display: block; }
+        }
+        @media (min-width: 769px) { .menu-toggle { display: none; } }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
 </head>
-
-
-<body>
-
-
-
-<!-- NAVBAR -->
-
-<nav class="navbar">
-
-
-<div class="logo">
-
-📚 Digital Library
-
-</div>
-
-
-<ul class="menu">
-
-<li><a href="#">Beranda</a></li>
-
-<li><a href="#kategori">Kategori</a></li>
-
-<li><a href="#koleksi">Buku</a></li>
-
-<li><a href="#">Favorit</a></li>
-
-
-</ul>
-
-
-</nav>
-
-
-
-
-<!-- HERO -->
-
-
-<div class="hero">
-
-
-<div>
-
-
-<h1>
-
-Belajar Tanpa Batas
-
-<br>
-
-Di <span>Digital Library</span>
-
-</h1>
-
-
-<p>
-
-Perpustakaan digital modern dengan berbagai ilmu.
-
-Temukan buku Matematika, Fisika, Kimia, Sejarah,
-
-Filsafat, Teknologi, Motivasi dan banyak lagi.
-
-</p>
-
-
-<a href="#koleksi" class="btn">
-
-Mulai Membaca
-
-</a>
-
-
-</div>
-
-
-
-<div class="book-animation">
-
-<div class="floating-book">
-
-📖
-
-</div>
-
-</div>
-
-
-
-</div>
-
-
-
-
-
-<!-- KATEGORI -->
-
-
-<section id="kategori">
-
-
-<h2 class="title">
-
-Kategori Ilmu
-
-</h2>
-
-
-<div class="category-container">
-
-
-<div class="category">
-
-📐
-
-<br>
-
-Matematika
-
-</div>
-
-
-<div class="category">
-
-⚛️
-
-<br>
-
-Fisika
-
-</div>
-
-
-<div class="category">
-
-🧪
-
-<br>
-
-Kimia
-
-</div>
-
-
-<div class="category">
-
-🏛️
-
-<br>
-
-Sejarah
-
-</div>
-
-
-<div class="category">
-
-🧠
-
-<br>
-
-Filsafat
-
-</div>
-
-
-<div class="category">
-
-💻
-
-<br>
-
-Programming
-
-</div>
-
-
-<div class="category">
-
-🤖
-
-<br>
-
-AI
-
-</div>
-
-
-<div class="category">
-
-🚀
-
-<br>
-
-Motivasi
-
-</div>
-
-
-</div>
-
-
-</section>
-<!-- KOLEKSI BUKU -->
-
-<section id="koleksi">
-
-<h2 class="title">
-Koleksi Buku
-</h2>
-
-
-<div class="search-area">
-
-<input 
-type="text" 
-id="search"
-placeholder="🔍 Cari judul buku..."
->
-
-</div>
-
-
-
-<div class="book-container" id="bookList">
-
-
-
-<div class="book-card">
-
-<div class="cover">
-📐
-</div>
-
-<h3>Kalkulus Dasar</h3>
-
-<p>
-Matematika
-</p>
-
-<button class="read-btn"
-onclick="openBook(0)">
-Baca
-</button>
-
-</div>
-
-
-
-
-<div class="book-card">
-
-<div class="cover">
-📊
-</div>
-
-<h3>Statistika Dasar</h3>
-
-<p>
-Matematika
-</p>
-
-<button class="read-btn"
-onclick="openBook(1)">
-Baca
-</button>
-
-</div>
-
-
-
-
-
-<div class="book-card">
-
-<div class="cover">
-⚛️
-</div>
-
-<h3>Fisika Modern</h3>
-
-<p>
-Fisika
-</p>
-
-<button class="read-btn"
-onclick="openBook(2)">
-Baca
-</button>
-
-</div>
-
-
-
-
-
-<div class="book-card">
-
-<div class="cover">
-🧪
-</div>
-
-<h3>Kimia Dasar</h3>
-
-<p>
-Kimia
-</p>
-
-<button class="read-btn"
-onclick="openBook(3)">
-Baca
-</button>
-
-</div>
-
-
-
-
-
-<div class="book-card">
-
-<div class="cover">
-🏛️
-</div>
-
-<h3>Sejarah Dunia</h3>
-
-<p>
-Sejarah
-</p>
-
-<button class="read-btn"
-onclick="openBook(4)">
-Baca
-</button>
-
-</div>
-
-
-
-
-
-<div class="book-card">
-
-<div class="cover">
-🇮🇩
-</div>
-
-<h3>Sejarah Indonesia</h3>
-
-<p>
-Sejarah
-</p>
-
-<button class="read-btn"
-onclick="openBook(5)">
-Baca
-</button>
-
-</div>
-
-
-
-
-
-<div class="book-card">
-
-<div class="cover">
-🧠
-</div>
-
-<h3>Pengantar Filsafat</h3>
-
-<p>
-Filsafat
-</p>
-
-<button class="read-btn"
-onclick="openBook(6)">
-Baca
-</button>
-
-</div>
-
-
-
-
-
-<div class="book-card">
-
-<div class="cover">
-⚖️
-</div>
-
-<h3>Ideologi Dunia</h3>
-
-<p>
-Sosial & Politik
-</p>
-
-<button class="read-btn"
-onclick="openBook(7)">
-Baca
-</button>
-
-</div>
-
-
-
-
-
-<div class="book-card">
-
-<div class="cover">
-💻
-</div>
-
-<h3>Dasar Pemrograman</h3>
-
-<p>
-Teknologi
-</p>
-
-<button class="read-btn"
-onclick="openBook(8)">
-Baca
-</button>
-
-</div>
-
-
-
-
-
-<div class="book-card">
-
-<div class="cover">
-🤖
-</div>
-
-<h3>Artificial Intelligence</h3>
-
-<p>
-Teknologi
-</p>
-
-<button class="read-btn"
-onclick="openBook(9)">
-Baca
-</button>
-
-</div>
-
-
-
-
-
-<div class="book-card">
-
-<div class="cover">
-🚀
-</div>
-
-<h3>Pengembangan Diri</h3>
-
-<p>
-Motivasi
-</p>
-
-<button class="read-btn"
-onclick="openBook(10)">
-Baca
-</button>
-
-</div>
-
-
-
-
-<div class="book-card">
-
-<div class="cover">
-💰
-</div>
-
-<h3>Dasar Bisnis</h3>
-
-<p>
-Ekonomi
-</p>
-
-<button class="read-btn"
-onclick="openBook(11)">
-Baca
-</button>
-
-</div>
-
-
-
-</div>
-
-</section>
-
-
-
-
-<!-- PEMBACA BUKU -->
-
-
-<div id="reader">
-
-
-<div class="reader-content">
-
-
-<h2 id="readerTitle">
-Judul Buku
-</h2>
-
-
-<p id="readerText">
-
-Isi buku akan muncul disini.
-
-</p>
-
-
-
-<div>
-
-
-<button onclick="closeBook()">
-
-❌ Tutup
-
-</button>
-
-
-
-<button onclick="addBookmark()">
-
-🔖 Bookmark
-
-</button>
-
-
-
-<button onclick="addFavorite()">
-
-❤️ Favorit
-
-</button>
-
-
-</div>
-
-
-</div>
-</div>
-<footer>
-
-© 2026 Digital Library
-
-<br>
-
-Belajar • Membaca • Berkembang
-
-</footer>
-<script>
-
-
-// DATA ISI BUKU
-
-const books = [
-
-{
-title:"Kalkulus Dasar",
-text:
-"Kalkulus adalah cabang matematika yang mempelajari perubahan. Materi utama meliputi limit, turunan, integral, dan penerapannya dalam kehidupan."
-},
-
-
-{
-title:"Statistika Dasar",
-text:
-"Statistika adalah ilmu yang mempelajari pengumpulan, pengolahan, analisis, dan penyajian data untuk mengambil keputusan."
-},
-
-
-{
-title:"Fisika Modern",
-text:
-"Fisika mempelajari fenomena alam seperti energi, gaya, gerak, cahaya, atom, dan teknologi modern."
-},
-
-
-{
-title:"Kimia Dasar",
-text:
-"Kimia mempelajari materi, atom, molekul, reaksi kimia, serta perubahan suatu zat."
-},
-
-
-{
-title:"Sejarah Dunia",
-text:
-"Sejarah dunia membahas perkembangan manusia, peradaban besar, kerajaan, revolusi, dan peristiwa penting dunia."
-},
-
-
-{
-title:"Sejarah Indonesia",
-text:
-"Membahas perjalanan bangsa Indonesia dari masa kerajaan, penjajahan, kemerdekaan, hingga perkembangan modern."
-},
-
-
-{
-title:"Pengantar Filsafat",
-text:
-"Filsafat mempelajari cara berpikir kritis tentang manusia, pengetahuan, kehidupan, dan kebenaran."
-},
-
-
-{
-title:"Ideologi Dunia",
-text:
-"Membahas berbagai ideologi seperti demokrasi, liberalisme, sosialisme, dan perkembangan pemikiran politik."
-},
-
-
-{
-title:"Dasar Pemrograman",
-text:
-"Pemrograman adalah proses membuat instruksi untuk komputer menggunakan bahasa seperti HTML, CSS, JavaScript, Python, dan lainnya."
-},
-
-
-{
-title:"Artificial Intelligence",
-text:
-"Kecerdasan buatan adalah teknologi yang membuat komputer mampu melakukan tugas yang membutuhkan kecerdasan manusia."
-},
-
-
-{
-title:"Pengembangan Diri",
-text:
-"Pengembangan diri membahas disiplin, kebiasaan baik, tujuan hidup, dan cara meningkatkan kemampuan diri."
-},
-
-
-{
-title:"Dasar Bisnis",
-text:
-"Bisnis mempelajari cara menciptakan nilai, mengelola usaha, pemasaran, dan strategi perkembangan."
-}
-
-];
-
-
-
-
-
-// OPEN BUKU
-
-function openBook(index){
-
-
-document.getElementById("reader")
-.style.display="block";
-
-
-document.getElementById("readerTitle")
-.innerText =
-books[index].title;
-
-
-
-document.getElementById("readerText")
-.innerText =
-books[index].text;
-
-
-
-localStorage.setItem(
-"lastRead",
-books[index].title
-);
-
-
-}
-
-
-
-
-
-
-// CLOSE BUKU
-
-function closeBook(){
-
-
-document.getElementById("reader")
-.style.display="none";
-
-
-}
-
-
-
-
-
-
-// SEARCH
-
-const search =
-document.getElementById("search");
-
-
-const cards =
-document.querySelectorAll(".book-card");
-
-
-
-search.addEventListener(
-"keyup",
-function(){
-
-
-let value =
-search.value.toLowerCase();
-
-
-
-cards.forEach(card=>{
-
-
-let text =
-card.innerText.toLowerCase();
-
-
-
-if(text.includes(value)){
-
-
-card.style.display="block";
-
-
-}
-
-else{
-
-
-card.style.display="none";
-
-
-}
-
-
-
-});
-
-
-});
-
-
-
-
-
-
-
-
-// FAVORIT
-
-
-function addFavorite(){
-
-
-let title =
-document.getElementById("readerTitle")
-.innerText;
-
-
-
-let favorite =
-JSON.parse(
-localStorage.getItem("favorite")
-) || [];
-
-
-
-if(!favorite.includes(title)){
-
-
-favorite.push(title);
-
-
-localStorage.setItem(
-"favorite",
-JSON.stringify(favorite)
-);
-
-
-
-alert(
-"Buku masuk favorit ❤️"
-);
-
-
-}
-
-else{
-
-
-alert(
-"Buku sudah ada di favorit"
-);
-
-
-}
-
-
-}
-
-
-
-
-
-
-
-// BOOKMARK
-
-
-function addBookmark(){
-
-
-let title =
-document.getElementById("readerTitle")
-.innerText;
-
-
-
-let bookmark =
-JSON.parse(
-localStorage.getItem("bookmark")
-) || [];
-
-
-
-if(!bookmark.includes(title)){
-
-
-bookmark.push(title);
-
-
-
-localStorage.setItem(
-"bookmark",
-JSON.stringify(bookmark)
-);
-
-
-
-alert(
-"Buku berhasil disimpan 🔖"
-);
-
-
-
-}
-
-else{
-
-
-alert(
-"Buku sudah disimpan"
-);
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-// ANIMASI SCROLL
-
-
-const elements =
-document.querySelectorAll(
-".book-card,.category"
-);
-
-
-
-window.addEventListener(
-"scroll",
-()=>{
-
-
-elements.forEach(el=>{
-
-
-let position =
-el.getBoundingClientRect()
-.top;
-
-
-
-if(position <
-window.innerHeight - 50){
-
-
-el.style.opacity="1";
-
-el.style.transform=
-"translateY(0)";
-
-
-}
-
-
-});
-
-
-});
-// SET AWAL ANIMASI
-elements.forEach(el=>{
-
-
-el.style.opacity="0";
-
-el.style.transform=
-"translateY(40px)";
-
-el.style.transition=
-"0.6s";
-
-});
-</script>
+<body data-theme="light">
+
+    <!-- Loading Screen -->
+    <div id="loader"><div class="spinner"></div></div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Auth Section -->
+    <section id="auth-section" class="auth-wrapper">
+        <div class="glass auth-card">
+            <h2 id="auth-title">Login EduLib</h2>
+            <form id="auth-form">
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="email" required placeholder="user@edulib.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" required placeholder="******">
+                </div>
+                <button type="submit" class="btn" style="width: 100%;">Masuk</button>
+            </form>
+            <p style="margin-top: 15px; font-size: 0.9rem;">
+                Belum punya akun? <a href="#" id="toggle-auth" style="color: var(--primary);">Daftar</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboard-section" class="dashboard-layout hidden">
+        <!-- Sidebar -->
+        <aside class="glass sidebar" id="sidebar">
+            <div class="logo">📚 EduLib</div>
+            <nav>
+                <div class="nav-item active" onclick="app.navigate('home')">🏠 Beranda</div>
+                <div class="nav-item" onclick="app.navigate('bookmarks')">🔖 Bookmark</div>
+                <div class="nav-item" onclick="app.navigate('history')">🕒 Riwayat</div>
+                <div class="nav-item admin-only hidden" onclick="app.navigate('admin')">⚙️ Admin Panel</div>
+                <div class="nav-item" onclick="app.toggleTheme()">🌓 Mode Gelap/Terang</div>
+                <div class="nav-item" onclick="app.logout()" style="color: #ef4444;">🚪 Keluar</div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <button class="btn btn-outline menu-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')">☰</button>
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="Cari buku, tokoh, atau topik...">
+                    <button class="btn" onclick="app.handleSearch()">Cari</button>
+                </div>
+                <div id="user-info" style="font-weight: bold;"></div>
+            </header>
+
+            <!-- Views -->
+            <div id="view-home">
+                <div class="categories" id="category-list">
+                    <!-- Categories injected by JS -->
+                </div>
+                <div class="book-grid" id="book-list">
+                    <!-- Books injected by JS -->
+                </div>
+            </div>
+
+            <div id="view-detail" class="hidden detail-view glass">
+                <!-- Book Detail injected by JS -->
+            </div>
+
+            <div id="view-bookmarks" class="hidden">
+                <h2>Buku Disimpan</h2>
+                <div class="book-grid" id="bookmark-list"></div>
+            </div>
+
+            <div id="view-history" class="hidden">
+                <h2>Riwayat Membaca</h2>
+                <div class="book-grid" id="history-list"></div>
+            </div>
+
+            <div id="view-admin" class="hidden">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <h2>Manajemen Buku</h2>
+                    <button class="btn" onclick="app.openAdminModal()">+ Tambah Buku</button>
+                </div>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table glass">
+                        <thead>
+                            <tr><th>Judul</th><th>Kategori</th><th>Aksi</th></tr>
+                        </thead>
+                        <tbody id="admin-book-list"></tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </section>
+
+    <!-- Admin Modal -->
+    <div id="admin-modal" class="modal hidden">
+        <div class="glass modal-content">
+            <h3 id="modal-title">Tambah Buku</h3>
+            <form id="book-form">
+                <input type="hidden" id="book-id">
+                <div class="form-group"><label>Judul</label><input type="text" id="inp-title" required></div>
+                <div class="form-group"><label>Penulis</label><input type="text" id="inp-author" required></div>
+                <div class="form-group"><label>Kategori</label>
+                    <select id="inp-category" style="width:100%; padding:10px; border-radius:8px;">
+                        <!-- Options filled by JS -->
+                    </select>
+                </div>
+                <div class="form-group"><label>Ringkasan</label><textarea id="inp-summary" rows="3" style="width:100%; padding:10px; border-radius:8px;"></textarea></div>
+                
+                <details style="margin-bottom:15px; cursor:pointer;">
+                    <summary>Konten Lengkap (Klik untuk membuka)</summary>
+                    <div class="form-group"><label>Pengertian</label><textarea id="inp-def" rows="2" style="width:100%;"></textarea></div>
+                    <div class="form-group"><label>Sejarah & Penemu</label><textarea id="inp-history" rows="3" style="width:100%;"></textarea></div>
+                    <div class="form-group"><label>Tahun Ditemukan</label><input type="text" id="inp-year-disc"></div>
+                    <div class="form-group"><label>Negara Asal</label><input type="text" id="inp-country"></div>
+                    <div class="form-group"><label>Inspirasi</label><textarea id="inp-inspiration" rows="2" style="width:100%;"></textarea></div>
+                    <div class="form-group"><label>Perkembangan</label><textarea id="inp-dev" rows="3" style="width:100%;"></textarea></div>
+                    <div class="form-group"><label>Penerapan</label><textarea id="inp-app" rows="2" style="width:100%;"></textarea></div>
+                    <div class="form-group"><label>Fakta Menarik (JSON Array)</label><textarea id="inp-facts" rows="2" style="width:100%;" placeholder='["Fakta 1", "Fakta 2"]'></textarea></div>
+                </details>
+
+                <div style="display:flex; gap:10px; justify-content:flex-end;">
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('admin-modal').classList.add('hidden')">Batal</button>
+                    <button type="submit" class="btn">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * EDULIB CORE LOGIC
+         * Modular JavaScript without frameworks
+         */
+
+        // --- DATA SEEDING ---
+        const CATEGORIES = ["Matematika", "Fisika", "Kimia", "Biologi", "Sejarah", "Geografi", "Informatika", "RPL", "AI", "Robotika", "Cyber Security"];
+        
+        const INITIAL_BOOKS = [
+            {
+                id: 1,
+                title: "Dasar Kecerdasan Buatan",
+                author: "Alan Turing et al.",
+                year: "2025",
+                category: "AI",
+                summary: "Pengantar mendalam tentang bagaimana mesin belajar meniru kecerdasan manusia.",
+                definition: "AI adalah simulasi proses kecerdasan manusia oleh mesin, terutama sistem komputer.",
+                history: "Konsep AI dimulai pada tahun 1950-an. Alan Turing mengajukan pertanyaan 'Can machines think?' yang memicu perkembangan bidang ini.",
+                discoverer: "Alan Turing, John McCarthy",
+                yearDiscovered: "1950",
+                country: "Inggris & USA",
+                inspiration: "Keinginan untuk mengotomatisasi penalaran logis.",
+                development: "Dari expert systems di tahun 80-an hingga Deep Learning di tahun 2010-an.",
+                contributors: "Geoffrey Hinton, Yann LeCun",
+                application: "Asisten virtual, mobil otonom, diagnosa medis.",
+                facts: ["AI mengalahkan juara dunia Go pada 2016", "Generative AI muncul kuat di 2023"],
+                quiz: { q: "Siapa yang mengajukan tes Turing?", options: ["Elon Musk", "Alan Turing", "Bill Gates"], ans: 1 }
+            },
+            {
+                id: 2,
+                title: "Hukum Gerak Newton",
+                author: "Isaac Newton",
+                year: "1687",
+                category: "Fisika",
+                summary: "Tiga hukum dasar yang menjadi fondasi mekanika klasik.",
+                definition: "Hukum yang menjelaskan hubungan antara gaya yang bekerja pada suatu benda dan gerak yang disebabkannya.",
+                history: "Diterbitkan dalam Philosophiæ Naturalis Principia Mathematica.",
+                discoverer: "Isaac Newton",
+                yearDiscovered: "1687",
+                country: "Inggris",
+                inspiration: "Observasi terhadap gerak benda langit dan apel (mitos).",
+                development: "Menjadi dasar rekayasa mesin hingga era luar angkasa.",
+                contributors: "Galileo Galilei",
+                application: "Desain kendaraan, konstruksi bangunan, olahraga.",
+                facts: ["Hukum III: Aksi = Reaksi", "Berlaku untuk skala makroskopis"],
+                quiz: { q: "Hukum Newton ke-3 berbunyi?", options: ["F=ma", "Aksi-Reaksi", "Inersia"], ans: 1 }
+            }
+        ];
+
+        // --- APP STATE & STORAGE ---
+        const app = {
+            data: {
+                books: [],
+                users: [],
+                currentUser: null,
+                bookmarks: [],
+                history: []
+            },
+
+            init: function() {
+                this.loadData();
+                this.setupEventListeners();
+                this.renderCategories();
+                
+                // Simulate loading
+                setTimeout(() => {
+                    document.getElementById('loader').classList.add('hidden');
+                    if (this.data.currentUser) {
+                        this.showDashboard();
+                    } else {
+                        this.showAuth();
+                    }
+                }, 1000);
+            },
+
+            loadData: function() {
+                const storedBooks = localStorage.getItem('edulib_books');
+                const storedUsers = localStorage.getItem('edulib_users');
+                const storedSession = localStorage.getItem('edulib_session');
+                const storedBookmarks = localStorage.getItem('edulib_bookmarks');
+                const storedHistory = localStorage.getItem('edulib_history');
+
+                this.data.books = storedBooks ? JSON.parse(storedBooks) : INITIAL_BOOKS;
+                if (!storedBooks) this.saveData('books', this.data.books);
+
+                this.data.users = storedUsers ? JSON.parse(storedUsers) : [];
+                this.data.bookmarks = storedBookmarks ? JSON.parse(storedBookmarks) : [];
+                this.data.history = storedHistory ? JSON.parse(storedHistory) : [];
+                
+                if (storedSession) {
+                    this.data.currentUser = JSON.parse(storedSession);
+                }
+            },
+
+            saveData: function(key, value) {
+                localStorage.setItem(`edulib_${key}`, JSON.stringify(value));
+            },
+
+            // --- AUTHENTICATION ---
+            setupEventListeners: function() {
+                // Auth Toggle
+                document.getElementById('toggle-auth').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const title = document.getElementById('auth-title');
+                    const isLogin = title.innerText === 'Login EduLib';
+                    title.innerText = isLogin ? 'Daftar Akun Baru' : 'Login EduLib';
+                    e.target.innerText = isLogin ? 'Sudah punya akun? Masuk' : 'Belum punya akun? Daftar';
+                });
+
+                // Auth Form
+                document.getElementById('auth-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('email').value;
+                    const pass = document.getElementById('password').value;
+                    const isLogin = document.getElementById('auth-title').innerText === 'Login EduLib';
+
+                    if (isLogin) {
+                        const user = this.data.users.find(u => u.email === email && u.pass === pass);
+                        if (user || (email === 'admin@edulib.com' && pass === 'admin')) { // Default admin
+                            const userData = user || { name: 'Admin', role: 'admin', email: 'admin@edulib.com' };
+                            this.login(userData);
+                        } else {
+                            this.toast('Email atau password salah', 'error');
+                        }
+                    } else {
+                        if (this.data.users.find(u => u.email === email)) {
+                            this.toast('Email sudah terdaftar', 'error');
+                        } else {
+                            const newUser = { name: email.split('@')[0], email, pass, role: 'user' };
+                            this.data.users.push(newUser);
+                            this.saveData('users', this.data.users);
+                            this.toast('Registrasi berhasil! Silakan login.', 'success');
+                            document.getElementById('toggle-auth').click();
+                        }
+                    }
+                });
+
+                // Search
+                document.getElementById('search-input').addEventListener('keyup', (e) => {
+                    if(e.key === 'Enter') this.handleSearch();
+                });
+
+                // Admin Form
+                document.getElementById('book-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.saveBookFromForm();
+                });
+            },
+
+            login: function(user) {
+                this.data.currentUser = user;
+                localStorage.setItem('edulib_session', JSON.stringify(user));
+                this.toast(`Selamat datang, ${user.name}!`, 'success');
+                this.showDashboard();
+            },
+
+            logout: function() {
+                this.data.currentUser = null;
+                localStorage.removeItem('edulib_session');
+                this.showAuth();
+                this.toast('Berhasil keluar', 'success');
+            },
+
+            // --- NAVIGATION & UI ---
+            showAuth: function() {
+                document.getElementById('auth-section').classList.remove('hidden');
+                document.getElementById('dashboard-section').classList.add('hidden');
+            },
+
+            showDashboard: function() {
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('dashboard-section').classList.remove('hidden');
+                document.getElementById('user-info').innerText = `Hi, ${this.data.currentUser.name}`;
+                
+                // Check Admin
+                if (this.data.currentUser.role === 'admin') {
+                    document.querySelector('.admin-only').classList.remove('hidden');
+                } else {
+                    document.querySelector('.admin-only').classList.add('hidden');
+                }
+
+                this.navigate('home');
+            },
+
+            navigate: function(view) {
+                // Hide all views
+                ['view-home', 'view-detail', 'view-bookmarks', 'view-history', 'view-admin'].forEach(id => {
+                    document.getElementById(id).classList.add('hidden');
+                });
+                
+                // Update Sidebar Active State
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+                // Simple logic for active state based on onclick attribute matching
+                
+                if (view === 'home') {
+                    document.getElementById('view-home').classList.remove('hidden');
+                    this.renderBooks(this.data.books);
+                } else if (view === 'bookmarks') {
+                    document.getElementById('view-bookmarks').classList.remove('hidden');
+                    this.renderBookmarks();
+                } else if (view === 'history') {
+                    document.getElementById('view-history').classList.remove('hidden');
+                    this.renderHistory();
+                } else if (view === 'admin') {
+                    document.getElementById('view-admin').classList.remove('hidden');
+                    this.renderAdminTable();
+                }
+                
+                // Close sidebar on mobile
+                document.getElementById('sidebar').classList.remove('open');
+            },
+
+            toggleTheme: function() {
+                const body = document.body;
+                const current = body.getAttribute('data-theme');
+                const next = current === 'light' ? 'dark' : 'light';
+                body.setAttribute('data-theme', next);
+            },
+
+            toast: function(msg, type = 'success') {
+                const container = document.getElementById('toast-container');
+                const div = document.createElement('div');
+                div.className = `toast ${type}`;
+                div.innerText = msg;
+                container.appendChild(div);
+                setTimeout(() => div.remove(), 3000);
+            },
+
+            // --- BOOK LOGIC ---
+            renderCategories: function() {
+                const list = document.getElementById('category-list');
+                const select = document.getElementById('inp-category');
+                
+                let html = `<span class="cat-pill active" onclick="app.filterCategory('All', this)">Semua</span>`;
+                let options = ``;
+                
+                CATEGORIES.forEach(cat => {
+                    html += `<span class="cat-pill" onclick="app.filterCategory('${cat}', this)">${cat}</span>`;
+                    options += `<option value="${cat}">${cat}</option>`;
+                });
+                
+                list.innerHTML = html;
+                select.innerHTML = options;
+            },
+
+            filterCategory: function(cat, element) {
+                document.querySelectorAll('.cat-pill').forEach(el => el.classList.remove('active'));
+                element.classList.add('active');
+                
+                if (cat === 'All') {
+                    this.renderBooks(this.data.books);
+                } else {
+                    const filtered = this.data.books.filter(b => b.category === cat);
+                    this.renderBooks(filtered);
+                }
+            },
+
+            handleSearch: function() {
+                const query = document.getElementById('search-input').value.toLowerCase();
+                const filtered = this.data.books.filter(b => 
+                    b.title.toLowerCase().includes(query) || 
+                    b.author.toLowerCase().includes(query) ||
+                    b.category.toLowerCase().includes(query)
+                );
+                this.navigate('home');
+                this.renderBooks(filtered);
+            },
+
+            renderBooks: function(books) {
+                const grid = document.getElementById('book-list');
+                grid.innerHTML = '';
+                
+                if(books.length === 0) {
+                    grid.innerHTML = '<p>Tidak ada buku ditemukan.</p>';
+                    return;
+                }
+
+                books.forEach(book => {
+                    const card = document.createElement('div');
+                    card.className = 'glass book-card';
+                    card.innerHTML = `
+                        <div class="book-cover">${book.category.substring(0,3).toUpperCase()}</div>
+                        <div class="book-title">${book.title}</div>
+                        <div class="book-meta">${book.author} • ${book.year}</div>
+                        <div class="book-actions">
+                            <button class="btn btn-outline" style="padding:5px 10px; font-size:0.8rem" onclick="app.readBook(${book.id})">Baca</button>
+                            <button class="btn" style="padding:5px 10px; font-size:0.8rem" onclick="app.toggleBookmark(${book.id})">
+                                ${this.isBookmarked(book.id) ? '★' : '☆'}
+                            </button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            },
+
+            readBook: function(id) {
+                const book = this.data.books.find(b => b.id === id);
+                if (!book) return;
+
+                // Add to history
+                this.addToHistory(id);
+
+                const view = document.getElementById('view-detail');
+                view.classList.remove('hidden');
+                ['view-home', 'view-bookmarks', 'view-history', 'view-admin'].forEach(v => document.getElementById(v).classList.add('hidden'));
+
+                // Render Content
+                view.innerHTML = `
+                    <button class="btn btn-outline" onclick="app.navigate('home')" style="margin-bottom:20px;">← Kembali</button>
+                    <div class="detail-header">
+                        <h1>${book.title}</h1>
+                        <p><strong>Penulis:</strong> ${book.author} | <strong>Tahun:</strong> ${book.year} | <strong>Kategori:</strong> ${book.category}</p>
+                    </div>
+                    
+                    <div class="detail-section">
+                        <h3>Ringkasan & Pengertian</h3>
+                        <p>${book.summary}</p>
+                        <p style="margin-top:10px;"><em>${book.definition}</em></p>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>Sejarah Penemuan</h3>
+                        <p>${book.history}</p>
+                        <ul>
+                            <li><strong>Penemu:</strong> ${book.discoverer}</li>
+                            <li><strong>Tahun:</strong> ${book.yearDiscovered}</li>
+                            <li><strong>Negara:</strong> ${book.country}</li>
+                            <li><strong>Inspirasi:</strong> ${book.inspiration}</li>
+                        </ul>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>Perkembangan & Penerapan</h3>
+                        <p><strong>Perkembangan:</strong> ${book.development}</p>
+                        <p><strong>Tokoh Lain:</strong> ${book.contributors}</p>
+                        <p><strong>Penerapan:</strong> ${book.application}</p>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>Fakta Menarik</h3>
+                        <ul>
+                            ${book.facts.map(f => `<li>${f}</li>`).join('')}
+                        </ul>
+                    </div>
+
+                    <div class="quiz-container">
+                        <h3>Quiz Singkat</h3>
+                        <p>${book.quiz.q}</p>
+                        <div id="quiz-options-${book.id}">
+                            ${book.quiz.options.map((opt, idx) => 
+                                `<button class="quiz-option" onclick="app.checkQuiz(${book.id}, ${idx}, this)">${opt}</button>`
+                            ).join('')}
+                        </div>
+                        <p id="quiz-result-${book.id}" style="margin-top:10px; font-weight:bold;"></p>
+                    </div>
+                `;
+            },
+
+            checkQuiz: function(bookId, selectedIdx, btnElement) {
+                const book = this.data.books.find(b => b.id === bookId);
+                const resultText = document.getElementById(`quiz-result-${bookId}`);
+                const optionsDiv = document.getElementById(`quiz-options-${bookId}`);
+                
+                // Disable clicks
+                const buttons = optionsDiv.getElementsByTagName('button');
+                for(let btn of buttons) btn.disabled = true;
+
+                if (selectedIdx === book.quiz.ans) {
+                    btnElement.classList.add('correct');
+                    resultText.innerText = "Benar! 🎉";
+                    resultText.style.color = "#10b981";
+                } else {
+                    btnElement.classList.add('wrong');
+                    buttons[book.quiz.ans].classList.add('correct');
+                    resultText.innerText = "Salah. Jawaban yang benar ditandai hijau.";
+                    resultText.style.color = "#ef4444";
+                }
+            },
+
+            // --- BOOKMARK & HISTORY ---
+            isBookmarked: function(id) {
+                return this.data.bookmarks.includes(id);
+            },
+
+            toggleBookmark: function(id) {
+                if (this.data.bookmarks.includes(id)) {
+                    this.data.bookmarks = this.data.bookmarks.filter(bid => bid !== id);
+                    this.toast('Dihapus dari bookmark', 'success');
+                } else {
+                    this.data.bookmarks.push(id);
+                    this.toast('Disimpan ke bookmark', 'success');
+                }
+                this.saveData('bookmarks', this.data.bookmarks);
+                
+                // Refresh view if needed
+                if (!document.getElementById('view-home').classList.contains('hidden')) {
+                    this.renderBooks(this.data.books); // Re-render to update stars
+                } else if (!document.getElementById('view-bookmarks').classList.contains('hidden')) {
+                    this.renderBookmarks();
+                }
+            },
+
+            addToHistory: function(id) {
+                // Remove if exists then add to top
+                this.data.history = this.data.history.filter(hid => hid !== id);
+                this.data.history.unshift(id);
+                if (this.data.history.length > 10) this.data.history.pop(); // Keep last 10
+                this.saveData('history', this.data.history);
+            },
+
+            renderBookmarks: function() {
+                const list = document.getElementById('bookmark-list');
+                list.innerHTML = '';
+                const books = this.data.books.filter(b => this.data.bookmarks.includes(b.id));
+                
+                if (books.length === 0) list.innerHTML = '<p>Belum ada bookmark.</p>';
+                
+                books.forEach(book => {
+                    list.innerHTML += `
+                        <div class="glass book-card">
+                            <div class="book-title">${book.title}</div>
+                            <button class="btn btn-outline" onclick="app.readBook(${book.id})">Lanjutkan Baca</button>
+                        </div>
+                    `;
+                });
+            },
+
+            renderHistory: function() {
+                const list = document.getElementById('history-list');
+                list.innerHTML = '';
+                // Map IDs to objects preserving order
+                const books = this.data.history.map(id => this.data.books.find(b => b.id === id)).filter(Boolean);
+                
+                if (books.length === 0) list.innerHTML = '<p>Belum ada riwayat.</p>';
+
+                books.forEach(book => {
+                    list.innerHTML += `
+                        <div class="glass book-card">
+                            <div class="book-title">${book.title}</div>
+                            <button class="btn btn-outline" onclick="app.readBook(${book.id})">Baca Lagi</button>
+                        </div>
+                    `;
+                });
+            },
+
+            // --- ADMIN PANEL ---
+            renderAdminTable: function() {
+                const tbody = document.getElementById('admin-book-list');
+                tbody.innerHTML = '';
+                this.data.books.forEach(book => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${book.title}</td>
+                        <td>${book.category}</td>
+                        <td>
+                            <button class="btn btn-outline" style="padding:5px;" onclick="app.editBook(${book.id})">Edit</button>
+                            <button class="btn btn-danger" style="padding:5px;" onclick="app.deleteBook(${book.id})">Hapus</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            },
+
+            openAdminModal: function(isEdit = false) {
+                document.getElementById('admin-modal').classList.remove('hidden');
+                document.getElementById('modal-title').innerText = isEdit ? 'Edit Buku' : 'Tambah Buku';
+                if (!isEdit) document.getElementById('book-form').reset();
+            },
+
+            editBook: function(id) {
+                const book = this.data.books.find(b => b.id === id);
+                if (!book) return;
+
+                document.getElementById('book-id').value = book.id;
+                document.getElementById('inp-title').value = book.title;
+                document.getElementById('inp-author').value = book.author;
+                document.getElementById('inp-category').value = book.category;
+                document.getElementById('inp-summary').value = book.summary;
+                document.getElementById('inp-def').value = book.definition || '';
+                document.getElementById('inp-history').value = book.history || '';
+                document.getElementById('inp-year-disc').value = book.yearDiscovered || '';
+                document.getElementById('inp-country').value = book.country || '';
+                document.getElementById('inp-inspiration').value = book.inspiration || '';
+                document.getElementById('inp-dev').value = book.development || '';
+                document.getElementById('inp-app').value = book.application || '';
+                document.getElementById('inp-facts').value = JSON.stringify(book.facts || []);
+
+                this.openAdminModal(true);
+            },
+
+            deleteBook: function(id) {
+                if(confirm('Yakin ingin menghapus buku ini?')) {
+                    this.data.books = this.data.books.filter(b => b.id !== id);
+                    this.saveData('books', this.data.books);
+                    this.renderAdminTable();
+                    this.toast('Buku dihapus', 'success');
+                }
+            },
+
+            saveBookFromForm: function() {
+                const idInput = document.getElementById('book-id').value;
+                const newBook = {
+                    id: idInput ? parseInt(idInput) : Date.now(),
+                    title: document.getElementById('inp-title').value,
+                    author: document.getElementById('inp-author').value,
+                    category: document.getElementById('inp-category').value,
+                    year: new Date().getFullYear().toString(),
+                    summary: document.getElementById('inp-summary').value,
+                    definition: document.getElementById('inp-def').value,
+                    history: document.getElementById('inp-history').value,
+                    discoverer: "Unknown", // Simplified for form
+                    yearDiscovered: document.getElementById('inp-year-disc').value,
+                    country: document.getElementById('inp-country').value,
+                    inspiration: document.getElementById('inp-inspiration').value,
+                    development: document.getElementById('inp-dev').value,
+                    contributors: "Unknown",
+                    application: document.getElementById('inp-app').value,
+                    facts: JSON.parse(document.getElementById('inp-facts').value || "[]"),
+                    quiz: { q: "Quiz belum tersedia", options: ["Pilihan A"], ans: 0 } // Default quiz structure
+                };
+
+                if (idInput) {
+                    // Update
+                    const index = this.data.books.findIndex(b => b.id == idInput);
+                    // Preserve old quiz if not edited
+                    newBook.quiz = this.data.books[index].quiz; 
+                    this.data.books[index] = newBook;
+                } else {
+                    // Create
+                    this.data.books.push(newBook);
+                }
+
+                this.saveData('books', this.data.books);
+                document.getElementById('admin-modal').classList.add('hidden');
+                this.renderAdminTable();
+                this.toast('Data tersimpan', 'success');
+            }
+        };
+
+        // Start App
+        window.addEventListener('DOMContentLoaded', () => {
+            app.init();
+        });
+
+    </script>
+</body>
+</html>
