@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Finance Manager</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+
+    min-height:100vh;
+    background:linear-gradient(135deg,#2563eb,#7c3aed,#10b981);
+    color:white;
+
+}
+
+
+/* LOGIN */
+
+#loginPage{
+
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+}
+
+
+.login-box{
+
+    width:350px;
+    padding:30px;
+    background:rgba(255,255,255,.15);
+    backdrop-filter:blur(15px);
+    border-radius:25px;
+    box-shadow:0 20px 40px #0005;
+    animation:show .6s;
+
+}
+
+
+@keyframes show{
+
+from{
+opacity:0;
+transform:translateY(40px);
+}
+
+to{
+opacity:1;
+}
+
+}
+
+
+input,select,button{
+
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:12px;
+    border:none;
+
+}
+
+
+button{
+
+    cursor:pointer;
+    background:white;
+    color:#2563eb;
+    font-weight:bold;
+    transition:.3s;
+
+}
+
+
+button:hover{
+
+    transform:scale(1.05);
+
+}
+
+
+
+/* DASHBOARD */
+
+
+#dashboard{
+
+display:none;
+
+}
+
+
+nav{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:20px;
+
+}
+
+
+.logout{
+
+width:120px;
+
+}
+
+
+.container-dashboard{
+
+padding:20px;
+
+}
+
+
+.cards{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:20px;
+
+}
+
+
+.card{
+
+background:rgba(255,255,255,.15);
+backdrop-filter:blur(15px);
+padding:20px;
+border-radius:20px;
+margin-bottom:20px;
+
+}
+
+
+.card:hover{
+
+transform:translateY(-5px);
+transition:.3s;
+
+}
+
+
+.big{
+
+font-size:25px;
+font-weight:bold;
+
+}
+
+
+
+table{
+
+width:100%;
+border-collapse:collapse;
+
+}
+
+
+th,td{
+
+padding:10px;
+border-bottom:1px solid #ffffff55;
+
+}
+
+
+.delete{
+
+background:#ef4444;
+color:white;
+
+}
+
+
+@media(max-width:600px){
+
+nav{
+
+flex-direction:column;
+gap:10px;
+
+}
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+
+<!-- LOGIN -->
+
+
+<div id="loginPage">
+
+
+<div class="login-box">
+
+<h1>💰 Finance Manager</h1>
+
+<input id="user" placeholder="Username">
+
+<input id="pass" type="password" placeholder="Password">
+
+
+<button onclick="register()">
+Register
+</button>
+
+
+<button onclick="login()">
+Login
+</button>
+
+
+<p id="info"></p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<!-- DASHBOARD -->
+
+
+<div id="dashboard">
+
+
+<nav>
+
+<h2>Finance Manager</h2>
+
+<button class="logout" onclick="logout()">
+Logout
+</button>
+
+
+</nav>
+
+
+<div class="container-dashboard">
+
+
+
+<div class="cards">
+
+
+<div class="card">
+
+<h3>Saldo</h3>
+
+<p class="big" id="saldo">
+Rp 0
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h3>Pemasukan</h3>
+
+<p class="big" id="income">
+Rp 0
+</p>
+
+</div>
+
+
+
+
+<div class="card">
+
+<h3>Pengeluaran</h3>
+
+<p class="big" id="expense">
+Rp 0
+</p>
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h2>Tambah Transaksi</h2>
+
+
+<select id="type">
+
+<option value="income">
+Pemasukan
+</option>
+
+
+<option value="expense">
+Pengeluaran
+</option>
+
+
+</select>
+
+
+<input id="name" placeholder="Nama transaksi">
+
+
+<input id="amount" type="number" placeholder="Jumlah">
+
+
+<select id="category">
+
+<option>
+Makanan
+</option>
+
+<option>
+Transportasi
+</option>
+
+<option>
+Belanja
+</option>
+
+<option>
+Tagihan
+</option>
+
+<option>
+Gaji
+</option>
+
+<option>
+Bisnis
+</option>
+
+<option>
+Lainnya
+</option>
+
+
+</select>
+
+
+
+<button onclick="addTransaction()">
+
+Tambah
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>Target Tabungan</h2>
+
+
+<input id="target" type="number" placeholder="Target tabungan">
+
+
+<button onclick="saveTarget()">
+
+Simpan Target
+
+</button>
+
+
+<p id="targetText"></p>
+
+
+</div>
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>Pencarian</h2>
+
+
+<input id="search" placeholder="Cari transaksi..." onkeyup="showData()">
+
+
+</div>
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>Riwayat Transaksi</h2>
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>Nama</th>
+<th>Kategori</th>
+<th>Jumlah</th>
+<th>Aksi</th>
+
+</tr>
+
+
+</thead>
+
+
+<tbody id="list">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>Grafik Keuangan</h2>
+
+
+<canvas id="chart"></canvas>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<script>
+
+
+let currentUser="";
+
+
+let users=JSON.parse(localStorage.getItem("users")) || {};
+
+
+
+function register(){
+
+
+let u=document.getElementById("user").value;
+
+let p=document.getElementById("pass").value;
+
+
+
+if(!u || !p){
+
+info.innerHTML="Isi semua data";
+
+return;
+
+}
+
+
+
+if(users[u]){
+
+info.innerHTML="Username sudah ada";
+
+return;
+
+}
+
+
+
+users[u]={
+
+password:p,
+
+data:[],
+
+target:0
+
+};
+
+
+localStorage.setItem("users",JSON.stringify(users));
+
+
+info.innerHTML="Register berhasil";
+
+
+
+}
+
+
+
+
+function login(){
+
+
+let u=user.value;
+
+let p=pass.value;
+
+
+
+if(users[u] && users[u].password==p){
+
+
+currentUser=u;
+
+
+loginPage.style.display="none";
+
+dashboard.style.display="block";
+
+
+load();
+
+
+}
+
+else{
+
+info.innerHTML="Login gagal";
+
+}
+
+
+
+}
+
+
+
+function logout(){
+
+location.reload();
+
+}
+
+
+
+function addTransaction(){
+
+
+let data=users[currentUser].data;
+
+
+
+data.push({
+
+name:name.value,
+
+type:type.value,
+
+amount:Number(amount.value),
+
+category:category.value
+
+
+});
+
+
+
+save();
+
+
+name.value="";
+
+amount.value="";
+
+
+load();
+
+
+}
+
+
+
+function save(){
+
+localStorage.setItem("users",JSON.stringify(users));
+
+}
+
+
+
+function load(){
+
+
+let data=users[currentUser].data;
+
+
+let income=0;
+
+let expense=0;
+
+
+data.forEach(x=>{
+
+
+if(x.type=="income")
+
+income+=x.amount;
+
+else
+
+expense+=x.amount;
+
+
+});
+
+
+
+document.getElementById("income").innerHTML=
+"Rp "+income.toLocaleString();
+
+
+document.getElementById("expense").innerHTML=
+"Rp "+expense.toLocaleString();
+
+
+
+document.getElementById("saldo").innerHTML=
+"Rp "+(income-expense).toLocaleString();
+
+
+
+showData();
+
+chart(income,expense);
+
+
+targetText.innerHTML=
+"Target : Rp "+users[currentUser].target.toLocaleString();
+
+
+
+}
+
+
+
+
+function showData(){
+
+
+let tbody=document.getElementById("list");
+
+
+tbody.innerHTML="";
+
+
+let keyword=search.value.toLowerCase();
+
+
+users[currentUser].data.forEach((x,i)=>{
+
+
+if(x.name.toLowerCase().includes(keyword)){
+
+
+tbody.innerHTML+=`
+
+
+<tr>
+
+<td>${x.name}</td>
+
+<td>${x.category}</td>
+
+<td>
+Rp ${x.amount.toLocaleString()}
+</td>
+
+
+<td>
+
+<button class="delete" onclick="hapus(${i})">
+Hapus
+</button>
+
+</td>
+
+
+</tr>
+
+
+`;
+
+
+}
+
+
+});
+
+
+}
+
+
+
+
+function hapus(i){
+
+
+users[currentUser].data.splice(i,1);
+
+
+save();
+
+load();
+
+
+}
+
+
+
+
+function saveTarget(){
+
+
+users[currentUser].target=
+Number(target.value);
+
+
+save();
+
+
+load();
+
+
+}
+
+
+
+
+
+function chart(income,expense){
+
+
+new Chart(document.getElementById("chart"),{
+
+
+type:"doughnut",
+
+
+data:{
+
+
+labels:[
+
+"Pemasukan",
+
+"Pengeluaran"
+
+],
+
+
+datasets:[{
+
+
+data:[income,expense]
+
+
+}]
+
+
+}
+
+
+});
+
+
+}
+</script>
+
+
+</body>
+</html>

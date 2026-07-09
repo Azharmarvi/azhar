@@ -1,0 +1,144 @@
+import datetime
+
+# ================== FUNGSI DASAR ==================
+def salam():
+    print(" Halo! Saya Asisten Belajar Python")
+    nama = input("Masukkan nama kamu: ")
+    print(f"Selamat datang, {nama}! Yuk belajar sambil kuis ")
+    return nama
+
+
+def waktu():
+    now = datetime.datetime.now()
+    print(" Waktu :", now.strftime("%H:%M:%S"))
+
+
+def tanggal():
+    today = datetime.date.today()
+    print(" Tanggal :", today.strftime("%d-%m-%Y"))
+
+
+def kalkulator():
+    print("\n KALKULATOR")
+    a = float(input("Angka pertama: "))
+    b = float(input("Angka kedua: "))
+
+    print("1. Tambah")
+    print("2. Kurang")
+    print("3. Kali")
+    print("4. Bagi")
+
+    pilih = input("Pilih operasi: ")
+
+    if pilih == "1":
+        print("Hasil:", a + b)
+    elif pilih == "2":
+        print("Hasil:", a - b)
+    elif pilih == "3":
+        print("Hasil:", a * b)
+    elif pilih == "4":
+        if b != 0:
+            print("Hasil:", a / b)
+        else:
+            print(" Tidak bisa dibagi nol")
+    else:
+        print(" Pilihan salah")
+
+
+# ================== KUIS ==================
+def kuis():
+    print("\n KUIS PYTHON DASAR")
+    skor = 0
+
+    soal = [
+        {
+            "tanya": "1. Apa fungsi dari print()?",
+            "opsi": [
+                "A. Input data",
+                "B. Menampilkan output",
+                "C. Mengulang program",
+                "D. Menghentikan program"
+            ],
+            "jawab": "B"
+        },
+        {
+            "tanya": "2. Manakah tipe data bilangan bulat?",
+            "opsi": ["A. str", "B. float", "C. int", "D. bool"],
+            "jawab": "C"
+        },
+        {
+            "tanya": "3. Perintah perulangan di Python adalah?",
+            "opsi": ["A. if", "B. else", "C. for", "D. def"],
+            "jawab": "C"
+        },
+        {
+            "tanya": "4. Simbol untuk komentar adalah?",
+            "opsi": ["A. //", "B. <!-- -->", "C. #", "D. **"],
+            "jawab": "C"
+        },
+        {
+            "tanya": "5. Fungsi input() digunakan untuk?",
+            "opsi": [
+                "A. Menampilkan teks",
+                "B. Mengambil data dari user",
+                "C. Menghitung angka",
+                "D. Menghapus data"
+            ],
+            "jawab": "B"
+        }
+    ]
+
+    for s in soal:
+        print("\n" + s["tanya"])
+        for o in s["opsi"]:
+            print(o)
+
+        jawab = input("Jawaban (A/B/C/D): ").upper()
+        if jawab == s["jawab"]:
+            print(" Benar!")
+            skor += 20
+        else:
+            print(" Salah!")
+
+    print("\n NILAI AKHIR:", skor)
+
+    if skor >= 80:
+        print(" Sangat Baik! Kamu paham Python dasar")
+    elif skor >= 60:
+        print(" Cukup Baik, tetap belajar ya")
+    else:
+        print(" Jangan menyerah, ayo belajar lagi!")
+
+
+# ================== MENU ==================
+def menu():
+    print("""
+=== MENU ASISTEN ===
+1. Lihat Waktu
+2. Lihat Tanggal
+3. Kalkulator
+4. Kuis Python
+5. Keluar
+""")
+
+
+# ================== PROGRAM UTAMA ==================
+nama_user = salam()
+
+while True:
+    menu()
+    pilih = input("Pilih menu (1-5): ")
+
+    if pilih == "1":
+        waktu()
+    elif pilih == "2":
+        tanggal()
+    elif pilih == "3":
+        kalkulator()
+    elif pilih == "4":
+        kuis()
+    elif pilih == "5":
+        print(f" Terima kasih {nama_user}, sampai jumpa!")
+        break
+    else:
+        print(" Menu tidak tersedia")

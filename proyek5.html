@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Absensi Siswa</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:linear-gradient(135deg,#667eea,#764ba2);
+    padding:30px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    background:white;
+    padding:25px;
+    border-radius:20px;
+    box-shadow:0 15px 35px rgba(0,0,0,0.2);
+}
+
+h1{
+    text-align:center;
+    color:#333;
+    margin-bottom:25px;
+}
+
+.form{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+}
+
+
+input,select,button{
+
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+    font-size:16px;
+
+}
+
+
+button{
+
+    background:#667eea;
+    color:white;
+    border:none;
+    cursor:pointer;
+
+}
+
+
+button:hover{
+
+    background:#5563d6;
+
+}
+
+
+table{
+
+    width:100%;
+    margin-top:25px;
+    border-collapse:collapse;
+
+}
+
+
+th{
+
+    background:#667eea;
+    color:white;
+    padding:12px;
+
+}
+
+
+td{
+
+    padding:10px;
+    text-align:center;
+    border-bottom:1px solid #ddd;
+
+}
+
+
+.hapus{
+
+    background:#e74c3c;
+    padding:8px 12px;
+
+}
+
+
+.hapus:hover{
+
+    background:#c0392b;
+
+}
+
+
+@media(max-width:700px){
+
+table{
+
+font-size:12px;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📚 Absensi Siswa</h1>
+
+
+<div class="form">
+
+
+<input type="text" id="nama" placeholder="Nama Siswa">
+
+
+<select id="kelas">
+
+<option value="">Pilih Kelas</option>
+<option>X</option>
+<option>XI</option>
+<option>XII</option>
+
+</select>
+
+
+
+<select id="jurusan">
+
+<option value="">Pilih Jurusan</option>
+<option>RPL</option>
+<option>TKR</option>
+<option>TKJ</option>
+<option>DKV</option>
+<option>BR</option>
+<option>Akuntansi</option>
+
+</select>
+
+
+
+<select id="status">
+
+<option value="">Status Kehadiran</option>
+<option>Hadir</option>
+<option>Izin</option>
+<option>Sakit</option>
+<option>Alpha</option>
+
+</select>
+
+
+
+<button onclick="tambahAbsensi()">
+Tambah Absensi
+</button>
+
+
+</div>
+
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>No</th>
+<th>Nama</th>
+<th>Kelas</th>
+<th>Jurusan</th>
+<th>Status</th>
+<th>Tanggal</th>
+<th>Aksi</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="dataAbsensi">
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+
+<script>
+
+
+let data = JSON.parse(localStorage.getItem("absensi")) || [];
+
+
+tampilkanData();
+
+
+
+function tambahAbsensi(){
+
+
+let nama = document.getElementById("nama").value;
+
+let kelas = document.getElementById("kelas").value;
+
+let jurusan = document.getElementById("jurusan").value;
+
+let status = document.getElementById("status").value;
+
+
+
+if(nama==="" || kelas==="" || jurusan==="" || status===""){
+
+alert("Harap isi semua data!");
+
+return;
+
+}
+
+
+
+let tanggal = new Date().toLocaleDateString("id-ID");
+
+
+
+let siswa = {
+
+nama:nama,
+kelas:kelas,
+jurusan:jurusan,
+status:status,
+tanggal:tanggal
+
+};
+
+
+
+data.push(siswa);
+
+
+
+localStorage.setItem("absensi",JSON.stringify(data));
+
+
+
+tampilkanData();
+
+
+
+document.getElementById("nama").value="";
+
+document.getElementById("kelas").value="";
+
+document.getElementById("jurusan").value="";
+
+document.getElementById("status").value="";
+
+
+}
+
+
+
+
+function tampilkanData(){
+
+
+let tabel = document.getElementById("dataAbsensi");
+
+
+tabel.innerHTML="";
+
+
+
+data.forEach((item,index)=>{
+
+
+tabel.innerHTML += `
+
+
+<tr>
+
+<td>${index+1}</td>
+
+<td>${item.nama}</td>
+
+<td>${item.kelas}</td>
+
+<td>${item.jurusan}</td>
+
+<td>${item.status}</td>
+
+<td>${item.tanggal}</td>
+
+
+<td>
+
+<button class="hapus" onclick="hapusData(${index})">
+
+Hapus
+
+</button>
+
+</td>
+
+
+</tr>
+
+
+`;
+
+
+});
+
+
+}
+
+
+
+
+function hapusData(index){
+
+
+data.splice(index,1);
+
+
+localStorage.setItem("absensi",JSON.stringify(data));
+
+
+tampilkanData();
+
+
+}
+
+
+
+</script>
+
+
+</body>
+</html>
