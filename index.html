@@ -74,6 +74,8 @@ html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Inter', sans-serif;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   background: linear-gradient(180deg,
     var(--cream) 0%,
     var(--cream2) 20%,
@@ -215,7 +217,8 @@ nav.scrolled {
 #hero {
   min-height: 100vh;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
+  place-items: center;
   position: relative;
   overflow: hidden;
   background:
@@ -225,10 +228,16 @@ nav.scrolled {
     linear-gradient(180deg, var(--cream) 0%, var(--cream2) 100%);
 }
 .hero-left {
-  padding: 12rem 4rem 6rem;
-  display: flex; flex-direction: column; justify-content: center;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8rem 2rem 5rem;
+  display: flex; flex-direction: column; justify-content: center; align-items: center;
+  text-align: center;
   position: relative; z-index: 1;
 }
+.hero-left .hero-desc { margin-left: auto; margin-right: auto; }
+.hero-left .hero-btns { justify-content: center; }
 .hero-eyebrow {
   font-size: 0.78rem;
   letter-spacing: 0.2em;
@@ -295,71 +304,14 @@ nav.scrolled {
 }
 .btn-secondary:hover { border-color: var(--sage); color: var(--ink); background: rgba(34,211,238,0.08); }
 
-.hero-right {
-  position: relative;
-  display: flex; align-items: center; justify-content: center;
-  background:
-    radial-gradient(circle at 25% 20%, rgba(139,92,246,0.28), transparent 45%),
-    radial-gradient(circle at 80% 75%, rgba(34,211,238,0.24), transparent 50%),
-    radial-gradient(circle at 60% 10%, rgba(103,232,249,0.18), transparent 40%),
-    var(--cream2);
-  overflow: hidden;
-  opacity: 0;
-  animation: fadeIn 1.2s 0.4s forwards;
-}
-.hero-photo-frame {
-  width: 72%;
-  aspect-ratio: 3/4;
-  position: relative;
-  overflow: hidden;
-}
-.hero-photo-frame::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: linear-gradient(135deg, var(--cream3) 0%, transparent 60%);
-  z-index: 1;
-}
-.hero-photo-placeholder {
-  width: 100%; height: 100%;
-  background: var(--cream3);
-  display: flex; align-items: center; justify-content: center;
-  font-family: 'Poppins', sans-serif;
-  font-size: 1rem;
-  color: var(--ink3);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.hero-photo-frame img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.hero-stat-card {
-  position: absolute;
-  background: var(--glass);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  padding: 1.2rem 1.5rem;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-}
-.hero-stat-card.card1 { bottom: 15%; left: -3%; animation: floatA 4s ease-in-out infinite; }
-.hero-stat-card.card2 { top: 20%; right: -3%; animation: floatB 5s ease-in-out infinite; }
-.stat-num {
-  font-family: 'Poppins', sans-serif;
-  font-size: 2.4rem; font-weight: 600;
-  background: linear-gradient(135deg, var(--sage), var(--terra));
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  line-height: 1;
-}
-.stat-label { font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink3); margin-top: 0.3rem; }
 
 .hero-line {
-  position: absolute; bottom: 3rem; left: 4rem;
+  position: absolute; bottom: 3rem; left: 50%;
+  transform: translateX(-50%);
   display: flex; align-items: center; gap: 1rem;
   font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink3);
   opacity: 0; animation: fadeUp 1s 1.2s forwards;
+  white-space: nowrap;
 }
 .hero-line::before { content: ''; display: block; width: 40px; height: 1px; background: var(--ink3); }
 
@@ -687,7 +639,45 @@ footer p { font-size: 0.8rem; color: var(--ink3); }
   0% { top: -100%; }
   100% { top: 100%; }
 }
-
+/* =============================================
+   FOTO PROFIL BULAT MELAYANG — DI ATAS JUDUL
+   ============================================= */
+.hero-photo-wrap {
+  display: inline-block;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 0.9s 0.2s forwards;
+  transition: transform 0.15s ease-out;
+  will-change: transform;
+}
+.hero-photo-round {
+  width: clamp(180px, 26vw, 260px);
+  height: clamp(180px, 26vw, 260px);
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
+  border: 3px solid rgba(34,211,238,0.45);
+  box-shadow: 0 0 0 8px rgba(139,92,246,0.10), 0 20px 45px rgba(139,92,246,0.35);
+  animation: photoFloat 5s ease-in-out infinite;
+}
+.hero-photo-round img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.hero-photo-round::after {
+  content: '';
+  position: absolute; inset: -10px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--sage), var(--terra));
+  z-index: -1;
+  opacity: 0.35;
+  filter: blur(16px);
+}
+@keyframes photoFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50%      { transform: translateY(-14px) rotate(2deg); }
+}
 /* RESPONSIVE */
 @media (max-width: 900px) {
   nav { padding: 1.2rem 2rem; }
@@ -695,8 +685,7 @@ footer p { font-size: 0.8rem; color: var(--ink3); }
   .nav-links, .nav-cta { display: none; }
   .hamburger { display: flex; }
   #hero { grid-template-columns: 1fr; }
-  .hero-right { display: none; }
-  .hero-left { padding: 8rem 2rem 4rem; }
+  .hero-left { padding: 7rem 2rem 4rem; }
   #tentang { grid-template-columns: 1fr; gap: 2rem; padding: 4rem 2rem; }
   .about-number { font-size: 5rem; }
   #portofolio { padding: 4rem 2rem; }
@@ -707,6 +696,38 @@ footer p { font-size: 0.8rem; color: var(--ink3); }
   #kontak { padding: 4rem 2rem; }
   .contact-grid { grid-template-columns: 1fr; gap: 3rem; }
   footer { padding: 1.5rem 2rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+}
+
+@media (max-width: 480px) {
+  .hero-left { padding: 7rem 1.3rem 3rem; }
+  .hero-title { font-size: clamp(2.4rem, 9vw, 3rem); }
+  .hero-desc { font-size: 0.92rem; max-width: 100%; }
+  .hero-btns { flex-wrap: wrap; justify-content: center; gap: 0.8rem; }
+  .btn-primary, .btn-secondary { padding: 0.8rem 1.6rem; font-size: 0.78rem; }
+  .hero-photo-round { width: clamp(160px, 38vw, 210px); height: clamp(160px, 38vw, 210px); }
+  .hero-line { font-size: 0.65rem; gap: 0.6rem; }
+  .about-number { font-size: 3.6rem; }
+  .about-title { font-size: 2rem; }
+  .divider { margin: 0 1rem; }
+  .divider-item { padding: 1.2rem 0.5rem; }
+  .divider-num { font-size: 2.6rem; }
+  .section-title { font-size: clamp(2rem, 8vw, 2.6rem); }
+  .mobile-link { font-size: clamp(1.6rem, 8vw, 2.2rem); }
+  .nav-logo { font-size: 1.1rem; }
+  nav { padding: 1rem 1.3rem; }
+}
+
+@media (max-width: 360px) {
+  html { font-size: 92%; }
+  .hero-left { padding: 6rem 1rem 2.5rem; }
+  .hero-title { font-size: clamp(2rem, 9.5vw, 2.6rem); }
+  .hero-desc { font-size: 0.85rem; }
+  .hero-photo-round { width: clamp(130px, 36vw, 165px); height: clamp(130px, 36vw, 165px); }
+  .hero-btns { gap: 0.6rem; }
+  .btn-primary, .btn-secondary { padding: 0.7rem 1.3rem; font-size: 0.72rem; }
+  .divider { grid-template-columns: 1fr; margin: 0 0.8rem; }
+  .divider-item { border-right: none; border-bottom: 1px solid var(--line); }
+  .section-title { font-size: clamp(1.7rem, 8vw, 2.2rem); }
 }
 
 /* =============================================
@@ -1004,20 +1025,6 @@ footer p { font-size: 0.8rem; color: var(--ink3); }
   .pq-number { font-size: 3.5rem; top: 1rem; right: 1.2rem; }
 }
 
-.hero-photo-frame{
-    width:72%;
-    aspect-ratio:3/4;
-    overflow:hidden;
-    position:relative;
-}
-
-.hero-photo-frame img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block;
-}
-
 /* =============================================
    PROJECT MODAL
    ============================================= */
@@ -1242,6 +1249,11 @@ body { animation: bgShift 22s ease-in-out infinite alternate; background-size: 2
 <!-- HERO -->
 <section id="hero">
   <div class="hero-left">
+    <div class="hero-photo-wrap" id="heroPhotoWrap">
+      <div class="hero-photo-round">
+        <img src="azhar.jpeg" alt="Foto Profil">
+      </div>
+    </div>
     <p class="hero-eyebrow">Developer Kreatif</p>
     <h1 class="hero-title">
       Menciptakan<br>
@@ -1257,19 +1269,6 @@ body { animation: bgShift 22s ease-in-out infinite alternate; background-size: 2
       <a href="#kontak" class="btn-secondary">Hubungi Saya</a>
     </div>
     <div class="hero-line">Tersedia untuk proyek freelance</div>
-  </div>
-  <div class="hero-right">
-   <div class="hero-photo-frame">
-    <img src="azhar.jpeg" alt="Foto Profil">
-</div>
-    <div class="hero-stat-card card1">
-      <div class="stat-num">6+</div>
-      <div class="stat-label">Proyek Selesai</div>
-    </div>
-    <div class="hero-stat-card card2">
-      <div class="stat-num">5★</div>
-      <div class="stat-label">Rating Klien</div>
-    </div>
   </div>
   <div class="scroll-indicator">
     <span>Gulir</span>
@@ -1795,14 +1794,6 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 });
 
 // =============================================
-// PARALLAX SUBTLE
-// =============================================
-window.addEventListener('scroll', () => {
-  const heroRight = document.querySelector('.hero-right');
-  if (heroRight) heroRight.style.transform = `translateY(${window.scrollY * 0.04}px)`;
-});
-
-// =============================================
 // SKILLS BAR ANIMATION
 // =============================================
 const skillObserver = new IntersectionObserver((entries) => {
@@ -1925,8 +1916,40 @@ document.querySelectorAll('.skills-group').forEach(g => skillObserver.observe(g)
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 })();
+// =============================================
+// INTERAKTIF: ELEMEN MENGIKUTI GERAK MOUSE
+// =============================================
+(function() {
+  const heroPhotoWrap = document.getElementById('heroPhotoWrap');
+  const pqDeco         = document.querySelector('.pq-bg-deco');
 
+  window.addEventListener('mousemove', (e) => {
+    const cx = window.innerWidth / 2;
+    const cy = window.innerHeight / 2;
+    const dx = (e.clientX - cx) / cx; // -1 s.d 1
+    const dy = (e.clientY - cy) / cy;
 
+    if (heroPhotoWrap) {
+      heroPhotoWrap.style.transform = `translate(${dx * 12}px, ${dy * 12}px)`;
+    }
+    if (pqDeco) {
+      pqDeco.style.transform = `translate(calc(-50% + ${dx * 22}px), calc(-50% + ${dy * 22}px))`;
+    }
+  });
+
+  // sedikit efek "tilt" 3D pada project card saat mouse bergerak di atasnya
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const px = (e.clientX - rect.left) / rect.width - 0.5;
+      const py = (e.clientY - rect.top) / rect.height - 0.5;
+      card.style.transform = `perspective(700px) rotateX(${py * -6}deg) rotateY(${px * 6}deg) translateY(-6px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+})();
 </script>
 </body>
 </html>
